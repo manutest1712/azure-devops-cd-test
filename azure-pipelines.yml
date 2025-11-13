@@ -1,0 +1,64 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool: myAgentPool
+
+variables:
+  projectRoot: $(System.DefaultWorkingDirectory)
+  environmentName: "production"
+  azureServiceConnectionId: 'DemoConnection'
+  webAppName: 'flaskwebapp123456'
+  
+stages:
+- stage: BuildStage
+  jobs:
+    - job: BuildJob
+      pool: myAgentPool
+      steps:
+        - script: |
+            echo Building...
+          workingDirectory: $(projectRoot)
+          displayName: 'Setting up the build process' 
+        - task: ArchiveFiles@2
+          displayName: 'myStep 4 - Archive files'
+          inputs:
+            rootFolderOrFile: '$(projectRoot)'
+            includeRootFolder: false
+            archiveType: zip
+            archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+            replaceExistingArchive: true
+
+        - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          displayName: 'myStep 5 - Upload package'
+          artifact: drop
+- stage: DeployStage
+  displayName: "Deploy to Azure Web App"
+  dependsOn: BuildStage
+  condition: succeeded()
+  jobs:
+    - deployment: DeployToWebApp
+      pool: myAgentPool
+      environment: $(environmentName)
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+
+            # Download the build artifact
+            - download: current
+              displayName: "Download build artifact"
+
+            # ✅ Deploy the ZIP to Azure Web App
+            - task: AzureWebApp@1
+              displayName: "Deploy to Azure Web App"
+              inputs:
+                azureSubscription: $(azureServiceConnectionId)
+                appName: $(webAppName)
+                package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                appType: webAppLinux
+                startUpCommand: 'pip install -r requirements.txt && gunicorn --bind 0.0.0.0:8000 app:app'
