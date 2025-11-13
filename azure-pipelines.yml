@@ -36,4 +36,4 @@ stages:
         continueOnError: true
         inputs:
           script: 'newman run StarterAPIs.json'
-          workingDirectory: 'starter-code/automatedtesting/postman'
+          workingDirectory: $(System.DefaultWorkingDirectory)
