@@ -16,10 +16,16 @@ variables:
   
 stages:
 - stage: BuildStage
+  displayName: "Build and Test"
   jobs:
     - job: BuildJob
       pool: myAgentPool
       steps:
+      # Ensure Node.js is available
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '18.x'  # Or whichever version your Newman requires
+        displayName: 'Use Node.js 18.x'
       - task: CmdLine@2
         displayName: Install Newman
         inputs:
