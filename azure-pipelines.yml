@@ -29,7 +29,7 @@ stages:
       - task: CmdLine@2
         displayName: Install Newman
         inputs:
-          script: 'sudo npm install -g newman'
+          script: 'npm install -g newman'
           workingDirectory: $(System.DefaultWorkingDirectory)
       - task: CmdLine@2
         displayName: Run Regression Tests
