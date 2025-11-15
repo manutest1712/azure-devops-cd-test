@@ -21,6 +21,11 @@ stages:
     - job: BuildJob
       pool: myAgentPool
       steps:
+      - task: TerraformInstaller@1
+        displayName: 'Install terraform'
+        inputs:
+          terraformVersion: 'latest'
+
       # Ensure Node.js is available
       - task: NodeTool@0
         inputs:
