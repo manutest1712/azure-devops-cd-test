@@ -44,33 +44,12 @@ stages:
           backendAzureRmKey: $(backend_key)
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         # --- CRITICAL: Define the ARM environment variables here ---
-        env:
+        #env:
           # These must be set as Secret Variables in Azure DevOps
-          TF_VAR_client_id: $(client_id)
-          TF_VAR_client_secret: $(client_secret)
-          TF_VAR_tenant_id: $(tenant_id)
-          TF_VAR_subscription_id: $(subscription_id)
-
-      # Terraform PLAN
-      - task: TerraformTaskV4@4
-        displayName: 'Terraform Plan'
-        inputs:
-          provider: azurerm
-          command: plan
-          backendServiceArm: $(azureServiceConnectionId)
-          backendAzureRmResourceGroupName: $(backend_rg)
-          backendAzureRmStorageAccountName: $(backend_stg)
-          backendAzureRmContainerName: $(backend_container)
-          backendAzureRmKey: $(backend_key)
-          environmentServiceNameAzureRM: $(azureServiceConnectionId)
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          commandOptions: '-out=tfplan'
-        env:
-          # These must be set as Secret Variables in Azure DevOps
-          TF_VAR_client_id: $(client_id)
-          TF_VAR_client_secret: $(client_secret)
-          TF_VAR_tenant_id: $(tenant_id)
-          TF_VAR_subscription_id: $(subscription_id)
+          #TF_VAR_client_id: $(client_id)
+          #TF_VAR_client_secret: $(client_secret)
+          #TF_VAR_tenant_id: $(tenant_id)
+          #TF_VAR_subscription_id: $(subscription_id)
 
       # Terraform APPLY
       - task: TerraformTaskV4@4
@@ -80,14 +59,13 @@ stages:
           command: apply
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
           environmentServiceNameAzureRM: $(azureServiceConnectionId)
-          commandOptions: 'tfplan'
         
-        env:
+        #env:
           # These must be set as Secret Variables in Azure DevOps
-          TF_VAR_client_id: $(client_id)
-          TF_VAR_client_secret: $(client_secret)
-          TF_VAR_tenant_id: $(tenant_id)
-          TF_VAR_subscription_id: $(subscription_id)
+          #TF_VAR_client_id: $(client_id)
+          #TF_VAR_client_secret: $(client_secret)
+          #TF_VAR_tenant_id: $(tenant_id)
+          #TF_VAR_subscription_id: $(subscription_id)
           
 
       # Ensure Node.js is available
