@@ -8,6 +8,7 @@ trigger:
 
 pool: myAgentPool
 
+
 variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   environmentName: "production"
