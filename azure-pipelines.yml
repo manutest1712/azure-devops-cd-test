@@ -88,6 +88,7 @@ stages:
           TF_VAR_client_secret: $(client_secret)
           TF_VAR_tenant_id: $(tenant_id)
           TF_VAR_subscription_id: $(subscription_id)
+          
 
       # Ensure Node.js is available
       - task: NodeTool@0
