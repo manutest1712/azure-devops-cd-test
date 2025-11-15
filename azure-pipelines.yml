@@ -8,11 +8,16 @@ trigger:
 
 pool: myAgentPool
 
+
 variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   environmentName: "production"
   azureServiceConnectionId: 'DemoConnection'
   webAppName: 'flaskwebapp123456'
+  backend_rg: 'AzureDevops'
+  backend_stg: 'tfstateaccount2025manu'
+  backend_container: 'tfstate'
+  backend_key: 'test.terraform.tfstate'
   
 stages:
 - stage: BuildStage
@@ -25,22 +30,64 @@ stages:
         displayName: 'Install terraform'
         inputs:
           terraformVersion: 'latest'
-
-      - task: CmdLine@2 # Use CmdLine if you are not relying on AzureCLI@2 for auth
-        displayName: 'Run Terraform Apply with Explicit Service Principal'
-        inputs:
-          script: |
-            terraform init
-            terraform apply -auto-approve
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
       
+      # Terraform INIT
+      - task: TerraformTaskV4@4
+        displayName: 'Terraform Init'
+        inputs:
+          provider: azurerm
+          command: init
+          backendServiceArm: $(azureServiceConnectionId)
+          backendAzureRmResourceGroupName: $(backend_rg)
+          backendAzureRmStorageAccountName: $(backend_stg)
+          backendAzureRmContainerName: $(backend_container)
+          backendAzureRmKey: $(backend_key)
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         # --- CRITICAL: Define the ARM environment variables here ---
+        #env:
+          # These must be set as Secret Variables in Azure DevOps
+          #TF_VAR_client_id: $(client_id)
+          #TF_VAR_client_secret: $(client_secret)
+          #TF_VAR_tenant_id: $(tenant_id)
+          #TF_VAR_subscription_id: $(subscription_id)
+
+            # Terraform PLAN
+     # - task: TerraformTaskV4@4
+     #   displayName: 'Terraform Plan'
+     #   inputs:
+     #     provider: azurerm
+     #     command: plan
+     #     backendServiceArm: $(azureServiceConnectionId)
+     #     backendAzureRmResourceGroupName: $(backend_rg)
+     #     backendAzureRmStorageAccountName: $(backend_stg)
+     #     backendAzureRmContainerName: $(backend_container)
+     #     backendAzureRmKey: $(backend_key)
+     #     environmentServiceNameAzureRM: $(azureServiceConnectionId)
+     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+     #     commandOptions: '-out=tfplan'
+     #   env:
+          # These must be set as Secret Variables in Azure DevOps
+     #     TF_VAR_client_id: $(client_id)
+     #     TF_VAR_client_secret: $(client_secret)
+     #     TF_VAR_tenant_id: $(tenant_id)
+     #     TF_VAR_subscription_id: $(subscription_id)
+      # Terraform APPLY
+      - task: TerraformTaskV4@4
+        displayName: 'Terraform Apply'
+        inputs:
+          provider: azurerm
+          command: apply
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          environmentServiceNameAzureRM: $(azureServiceConnectionId)
+    #      commandOptions: 'tfplan'
+        
         env:
           # These must be set as Secret Variables in Azure DevOps
           TF_VAR_client_id: $(client_id)
           TF_VAR_client_secret: $(client_secret)
           TF_VAR_tenant_id: $(tenant_id)
           TF_VAR_subscription_id: $(subscription_id)
+          
 
       # Ensure Node.js is available
       - task: NodeTool@0
@@ -56,5 +103,5 @@ stages:
         displayName: Run Regression Tests
         continueOnError: true
         inputs:
-          script: 'newman run starterapis.json'
-          workingDirectory: $(System.DefaultWorkingDirectory)
+          script: 'newman run StarterAPIs.json'
+          workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/postman
