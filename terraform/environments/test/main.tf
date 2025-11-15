@@ -24,7 +24,17 @@ data "azurerm_resource_group" "main" {
 
 
 # Public IP
-resource "azurerm_public_ip" "demo_vm_ip" {
+/*resource "azurerm_public_ip" "demo_vm_ip" {
+  name                = "demo-vm-public-ip"
+  location            = var.resource_location
+  resource_group_name = data.azurerm_resource_group.main.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+*/
+
+module "public_ip" {
+  source              = "../../modules/public-ip"
   name                = "demo-vm-public-ip"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
