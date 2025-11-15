@@ -13,6 +13,10 @@ variables:
   environmentName: "production"
   azureServiceConnectionId: 'DemoConnection'
   webAppName: 'flaskwebapp123456'
+  backend_rg: 'AzureDevops'
+  backend_stg: 'tfstateaccount2025manu'
+  backend_container: 'tfstate'
+  backend_key: 'test.terraform.tfstate'
   
 stages:
 - stage: BuildStage
@@ -33,11 +37,10 @@ stages:
           provider: azurerm
           command: init
           backendServiceArm: $(azureServiceConnectionId)
-          backendAzureRmResourceGroupName: 'AzureDevops'
-          backendAzureRmStorageAccountName: 'tfstateaccount2025manu'
-          backendAzureRmContainerName: 'tfstate'
-          backendAzureRmKey: 'test.terraform.tfstate'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          backendAzureRmResourceGroupName: $(backend_rg)
+          backendAzureRmStorageAccountName: $(backend_stg)
+          backendAzureRmContainerName: $(backend_container)
+          backendAzureRmKey: $(backend_key)
         # --- CRITICAL: Define the ARM environment variables here ---
         env:
           # These must be set as Secret Variables in Azure DevOps
