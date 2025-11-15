@@ -61,6 +61,7 @@ stages:
           backendAzureRmStorageAccountName: $(backend_stg)
           backendAzureRmContainerName: $(backend_container)
           backendAzureRmKey: $(backend_key)
+          environmentServiceNameAzureRM: $(azureServiceConnectionId)
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
           commandOptions: '-out=tfplan'
         env:
