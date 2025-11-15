@@ -7,6 +7,13 @@ terraform {
       version = "~> 3.70"
     }
   }
+  
+   backend "azurerm" {
+    resource_group_name  = "Azuredevops"
+    storage_account_name = "tfstateaccount2025manu"
+    container_name       = "tfstate"
+    key                  = "test.terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
@@ -91,7 +98,7 @@ module "service_plan" {
 
 module "web_app" {
   source              = "../../modules/appservice"
-  app_name            = "demo-app-udacity-xx"
+  app_name            = "demo-app-udacity"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
   service_plan_id     = module.service_plan.service_plan_id
