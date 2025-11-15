@@ -26,6 +26,21 @@ stages:
         inputs:
           terraformVersion: 'latest'
 
+      - task: CmdLine@2 # Use CmdLine if you are not relying on AzureCLI@2 for auth
+        displayName: 'Run Terraform Apply with Explicit Service Principal'
+        inputs:
+          script: |
+            terraform init
+            terraform apply -auto-approve
+      
+        # --- CRITICAL: Define the ARM environment variables here ---
+        env:
+          # These must be set as Secret Variables in Azure DevOps
+          ARM_CLIENT_ID: $(spClientId)
+          ARM_CLIENT_SECRET: $(spClientSecret)
+          ARM_TENANT_ID: $(spTenantId)
+          ARM_SUBSCRIPTION_ID: $(azureSubscriptionId)
+
       # Ensure Node.js is available
       - task: NodeTool@0
         inputs:
