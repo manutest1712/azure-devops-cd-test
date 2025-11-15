@@ -33,6 +33,10 @@ stages:
           provider: azurerm
           command: init
           backendServiceArm: $(azureServiceConnectionId)
+          backendAzureRmResourceGroupName: 'AzureDevops'
+          backendAzureRmStorageAccountName: 'tfstateaccount2025manu'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'test.terraform.tfstate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         # --- CRITICAL: Define the ARM environment variables here ---
         env:
