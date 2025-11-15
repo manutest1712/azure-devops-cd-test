@@ -32,6 +32,7 @@ stages:
           script: |
             terraform init
             terraform apply -auto-approve
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
       
         # --- CRITICAL: Define the ARM environment variables here ---
         env:
