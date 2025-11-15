@@ -72,6 +72,23 @@ stages:
           TF_VAR_tenant_id: $(tenant_id)
           TF_VAR_subscription_id: $(subscription_id)
 
+      # Terraform APPLY
+      - task: TerraformTaskV4@4
+        displayName: 'Terraform Apply'
+        inputs:
+          provider: azurerm
+          command: apply
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          environmentServiceNameAzureRM: $(azureServiceConnectionId)
+          commandOptions: 'tfplan'
+        
+        env:
+          # These must be set as Secret Variables in Azure DevOps
+          TF_VAR_client_id: $(client_id)
+          TF_VAR_client_secret: $(client_secret)
+          TF_VAR_tenant_id: $(tenant_id)
+          TF_VAR_subscription_id: $(subscription_id)
+
       # Ensure Node.js is available
       - task: NodeTool@0
         inputs:
