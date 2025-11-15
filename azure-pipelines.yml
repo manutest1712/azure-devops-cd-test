@@ -25,15 +25,15 @@ stages:
         displayName: 'Install terraform'
         inputs:
           terraformVersion: 'latest'
-
-      - task: CmdLine@2 # Use CmdLine if you are not relying on AzureCLI@2 for auth
-        displayName: 'Run Terraform Apply with Explicit Service Principal'
-        inputs:
-          script: |
-            terraform init
-            terraform apply -auto-approve
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
       
+      # Terraform INIT
+      - task: TerraformTaskV4@4
+        displayName: 'Terraform Init'
+        inputs:
+          provider: azurerm
+          command: init
+          backendServiceArm: $(azureServiceConnectionId)
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         # --- CRITICAL: Define the ARM environment variables here ---
         env:
           # These must be set as Secret Variables in Azure DevOps
