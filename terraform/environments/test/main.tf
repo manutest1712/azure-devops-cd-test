@@ -17,3 +17,17 @@ provider "azurerm" {
   client_secret   = var.client_secret
   tenant_id       = var.tenant_id
 }
+
+data "azurerm_resource_group" "main" {
+  name = "Azuredevops"
+}
+
+
+# Public IP
+resource "azurerm_public_ip" "demo_vm_ip" {
+  name                = "demo-vm-public-ip"
+  location            = var.resource_location
+  resource_group_name = data.azurerm_resource_group.main.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}

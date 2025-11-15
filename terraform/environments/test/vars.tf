@@ -19,7 +19,7 @@ variable "tenant_id" {
   description = "Azure tenant ID"
 }
 
-variable "location" {
+variable "resource_location" {
   type    = string
   default = "eastus"
 }
