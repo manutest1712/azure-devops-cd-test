@@ -2,8 +2,11 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import time
+
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 # Start the browser and login with standard_user
@@ -15,9 +18,7 @@ def login(user, password):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument("--headless") 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options=chrome_options)
 
     # Uncomment if running on a headless Linux server (CI/CD pipelines)
     # chrome_options.add_argument("--headless=new")
@@ -72,7 +73,9 @@ def add_all_products(driver):
 
     # Step 5: Validate cart badge (item count)
     try:
-        cart_badge = driver.find_element(By.CSS_SELECTOR, ".shopping_cart_badge")
+        cart_badge = WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".shopping_cart_badge"))
+        )
         cart_count = cart_badge.text
         print("Items in Cart:", cart_count)
 
