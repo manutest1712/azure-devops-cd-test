@@ -1,6 +1,6 @@
 {
   "id": "a2e25c16-04fa-4777-ab2b-aa4eb5e40c43",
-  "name": "TestEnv",
+  "name": "TestCDEnv",
   "values": [
     {
       "key": "firstName",
