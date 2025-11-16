@@ -105,3 +105,10 @@ stages:
         inputs:
           script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
           workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/postman
+
+      - task: CmdLine@2
+        displayName: Run Regression Tests
+        continueOnError: true
+        inputs:
+          script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
+          workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/postman
