@@ -63,8 +63,11 @@ def add_all_products(driver):
     for btn in add_buttons:
         product_name = btn.get_attribute("id").replace("add-to-cart-", "")
         print(f"Adding item: {product_name}")
-        btn.click()
-        time.sleep(1)
+        driver.execute_script("arguments[0].click();", btn)
+
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.ID, f"remove-{product_name}"))
+        )
 
     print("All items successfully added to the cart.")
 
