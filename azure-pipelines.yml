@@ -112,3 +112,12 @@ stages:
         inputs:
           script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
           workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/postman
+
+      - task: PublishTestResults@2
+        displayName: 'Publish Postman Test Results'
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: '**/TEST-*.xml'   # Matches TEST-DataValidation.xml and TEST-Regression.xml
+          searchFolder: $(System.DefaultWorkingDirectory)/automatedtesting/postman
+          mergeTestResults: true
+          testRunTitle: 'Postman Data Validation & Regression Tests'
