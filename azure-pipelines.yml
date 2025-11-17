@@ -265,6 +265,7 @@ stages:
     steps:
     - task: Bash@3
       inputs:
+        targetType: 'inline'
         workingDirectory: $(Pipeline.Workspace)/drop-perftests
         script: |
           set -e
