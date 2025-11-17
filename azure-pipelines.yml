@@ -156,7 +156,7 @@ stages:
             displayName: 'Deploy Azure Web App'
             inputs:
               azureSubscription: $(azureServiceConnectionId)     # ToDo
-              appName: demo-app-udacitydemo-app-udacity               # ToDo
+              appName: demo-app-udacity               # ToDo
               appType: webApp
               package: $(Pipeline.Workspace)/<artifact>/<archiveFile>       # ToDo: Use the published zip artifact. 
           #--------------------------------------------#    
