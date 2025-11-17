@@ -69,3 +69,37 @@ terraform init
 ```
 **Note**: command needs to be executed from the folder:
 azure-devops-cd-test/terraform\environments/test
+
+### Azure DevOps Pipeline Secret Variables
+
+The following environment variables are used in the Azure Pipeline to authenticate and manage resources in Azure via Terraform. These variables must be configured as secret variables in your Azure DevOps pipeline to ensure credentials are not exposed.
+
+```yaml
+env:
+  # These must be set as Secret Variables in Azure DevOps
+  TF_VAR_client_id: $(client_id)
+  TF_VAR_client_secret: $(client_secret)
+  TF_VAR_tenant_id: $(tenant_id)
+  TF_VAR_subscription_id: $(subscription_id)
+```
+
+#### Description of Variables
+
+| Variable Name            | Description                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------- |
+| `TF_VAR_client_id`       | Azure Service Principal Client ID. Used for Terraform authentication with Azure.                  |
+| `TF_VAR_client_secret`   | Azure Service Principal Client Secret. Must be kept secret to protect authentication credentials. |
+| `TF_VAR_tenant_id`       | Azure Tenant ID associated with the subscription.                                                 |
+| `TF_VAR_subscription_id` | Azure Subscription ID where resources will be deployed.                                           |
+
+
+#### Steps to Configure in Azure DevOps
+
+1. Navigate to your Azure DevOps pipeline.  
+2. Click on **Variables** → **Pipeline Variables**.  
+3. Add the following variables: `client_id`, `client_secret`, `tenant_id`, `subscription_id`.  
+4. Mark each variable as **secret** by checking the secret icon (🔒).  
+5. Save the pipeline. Terraform will automatically use these environment variables during execution.  
+
+**Note:** Never hard-code these credentials in the pipeline YAML or repository. Always use secret variables to ensure security.
+
