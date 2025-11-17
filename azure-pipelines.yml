@@ -163,19 +163,26 @@ stages:
               targetType: 'inline'
               script: |           
                 #! /bin/bash
-                cd ~/
-                DIR=/home/testuser/app
-                if [ ! -d "$DIR" ]; then
-                    mkdir -p "$DIR"
-                fi
-                mv /home/testuser/azagent/_work/1/drop-uitests/$(Build.BuildId)-uitests.zip app
+                # Use current user's home directory to avoid permission issues
+                DIR=~/app
+                mkdir -p "$DIR"
+
+                # Move the artifact to DIR
+                mv ~/azagent/_work/1/drop-uitests/$(Build.BuildId)-uitests.zip "$DIR/"
                 cd "$DIR"
+
+                # Unzip the Selenium test package
                 unzip -o $(Build.BuildId)-uitests.zip
                 
 
-                export PATH=$PATH:/home/testuser/app
+                # Add local app folder to PATH
+                export PATH=$PATH:$DIR
 
+                # Activate Python virtual environment
                 source /opt/selenium-env/bin/activate
+
+
+                # Run Selenium tests
                 echo "Starting Selenium Tests"
                 python3 login.py >> selenium.log
 
