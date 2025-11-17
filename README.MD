@@ -96,7 +96,8 @@ env:
 #### Steps to Configure in Azure DevOps
 
 1. Navigate to your Azure DevOps pipeline.  
-2. Click on **Variables** → **Pipeline Variables**.  
+2. Click on **Edit**
+2. Click on **Variables**  
 3. Add the following variables: `client_id`, `client_secret`, `tenant_id`, `subscription_id`.  
 4. Mark each variable as **secret** by checking the secret icon (🔒).  
 5. Save the pipeline. Terraform will automatically use these environment variables during execution.  
