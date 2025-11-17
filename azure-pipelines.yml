@@ -194,6 +194,6 @@ stages:
 
                 # Run Selenium tests
                 echo "Starting Selenium Tests"
-                python3 login.py >> selenium.log
+                python3 login.py | tee -a selenium.log
 
                 echo "Completed Selenium Tests. Check selenium.log for results."
