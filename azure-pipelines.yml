@@ -257,7 +257,6 @@ stages:
                 python3 login.py | tee -a selenium.log
 
                 echo "Completed Selenium Tests. Check selenium.log for results."
-
 - stage: LoadTest
   dependsOn: Deploy
   jobs:
