@@ -208,14 +208,15 @@ stages:
                 set -e
 
                 # Download latest stable JMeter bundle (URL never changes)
-                wget "wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-latest.tgz"
+                echo "downloading jmeter"
+                wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
                 
                 # Extract items
-                tar -xf apache-jmeter-latest.tgz
+                tar -xf apache-jmeter-5.6.3.tgz
 
                 unzip -o $(Build.BuildId)-perftests.zip
                 
-                ./apache-jmeter-5.2.1/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
+                ./apache-jmeter-5.6.3/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
                 cat jmeter.log                                                                           # ToDo: Write your commands
               workingDirectory: $(Pipeline.Workspace)/drop-perftests
 
