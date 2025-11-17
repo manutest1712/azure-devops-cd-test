@@ -200,30 +200,7 @@ stages:
               appType: webAppLinux
               package: $(Pipeline.Workspace)/drop-fakerestapi-py/$(Build.BuildId)-fakerestapi-py.zip
               startUpCommand: 'pip install -r requirements.txt && gunicorn --bind 0.0.0.0:8000 app:app'
-          #--------------------------------------------#    
-          # Run JMeter test suite against the App Service
-          - task: Bash@3
-            inputs:
-              workingDirectory: $(Pipeline.Workspace)
-              script: |
-                set -e
-
-                echo $(Pipeline.Workspace)
-                ls -R $(Pipeline.Workspace)
-
-                # Download latest stable JMeter bundle (URL never changes)
-                echo "downloading jmeter"
-                wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
-                
-                # Extract items
-                tar -xf apache-jmeter-5.6.3.tgz
-
-                unzip -o $(Build.BuildId)-perftests.zip
-                
-                ./apache-jmeter-5.6.3/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
-                cat jmeter.log                                                                           # ToDo: Write your commands
-              
-
+                                                                        # ToDo: Write your commands
   #--------------------------------------------#  
   # Selenium | Functional UI Tests
   # ToDo: 
@@ -280,3 +257,26 @@ stages:
                 python3 login.py | tee -a selenium.log
 
                 echo "Completed Selenium Tests. Check selenium.log for results."
+
+- stage: LoadTest
+  dependsOn: Deploy
+  jobs:
+  - job: RunJMeter
+    pool: myAgentPool
+    steps:
+    - task: Bash@3
+      inputs:
+        workingDirectory: $(Pipeline.Workspace)/drop-perftests
+        script: |
+          set -e
+
+          echo $(Pipeline.Workspace)
+          ls -R $(Pipeline.Workspace)
+
+          wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
+          tar -xf apache-jmeter-5.6.3.tgz
+
+          unzip -o $(Build.BuildId)-perftests.zip
+          
+          ./apache-jmeter-5.6.3/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
+          cat jmeter.log
