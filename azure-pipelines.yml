@@ -204,6 +204,7 @@ stages:
           # Run JMeter test suite against the App Service
           - task: Bash@3
             inputs:
+              workingDirectory: $(Pipeline.Workspace)
               script: |
                 set -e
 
