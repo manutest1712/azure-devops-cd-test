@@ -162,6 +162,21 @@ stages:
       - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi-py.zip
         displayName: 'Upload Package'
         artifact: drop-fakerestapi-py
+
+      #--------------------------------------------#  
+      # JMeter (Performance) Test Suite - Archive
+      # ToDo: Complete the ArchiveFiles@2 task and publish step 
+      - task: ArchiveFiles@2
+        displayName: 'Archive PerformanceTestSuite'
+        inputs:
+          rootFolderOrFile: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter/performancetest
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
+      # JMeter Test Suite - Publish    
+      - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
+        displayName: 'Upload Package'
+        artifact: drop-perftests
 #--------------------------------------------#  
 # DEPLOYMENT STAGE
 #--------------------------------------------#    
