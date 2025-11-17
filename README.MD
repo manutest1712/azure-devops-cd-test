@@ -85,12 +85,12 @@ env:
 
 #### Description of Variables
 
-| Variable Name            | Description                                                                                       |
-| ------------------------ | ------------------------------------------------------------------------------------------------- |
-| `TF_VAR_client_id`       | Azure Service Principal Client ID. Used for Terraform authentication with Azure.                  |
-| `TF_VAR_client_secret`   | Azure Service Principal Client Secret. Must be kept secret to protect authentication credentials. |
-| `TF_VAR_tenant_id`       | Azure Tenant ID associated with the subscription.                                                 |
-| `TF_VAR_subscription_id` | Azure Subscription ID where resources will be deployed.                                           |
+| Variable Name     | Description                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `client_id`       | Azure Service Principal Client ID. Used for Terraform authentication with Azure.                  |
+| `client_secret`   | Azure Service Principal Client Secret. Must be kept secret to protect authentication credentials. |
+| `tenant_id`       | Azure Tenant ID associated with the subscription.                                                 |
+| `subscription_id` | Azure Subscription ID where resources will be deployed.                                           |
 
 
 #### Steps to Configure in Azure DevOps
