@@ -18,6 +18,7 @@ variables:
   backend_stg: 'tfstateaccount2025manu'
   backend_container: 'tfstate'
   backend_key: 'test.terraform.tfstate'
+  selinum_test_enviroment: 'test-selenium-env'
   
 stages:
 - stage: BuildStage
@@ -147,7 +148,7 @@ stages:
   - deployment: VMDeploy
     displayName: Selenium Tests
     environment:
-      name: SeleniumVM        # ToDo: Change/provide a name
+      name: $(selinum_test_enviroment)
       resourceType: VirtualMachine
       tags: selenium
     strategy:
