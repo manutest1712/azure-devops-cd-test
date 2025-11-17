@@ -137,6 +137,19 @@ stages:
       - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
         displayName: 'Upload Package'
         artifact: drop-uitests
+          #--------------------------------------------#    
+      # FakeRestAPI - Archive
+      # ToDo: Complete the ArchiveFiles@2 task and publish step 
+      - task: ArchiveFiles@2
+        displayName: 'Archive FakeRestAPI'
+        inputs:
+          rootFolderOrFile: 
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+      - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+        displayName: 'Upload Package'
+        artifact: drop-fakerestapi
 #--------------------------------------------#  
 # DEPLOYMENT STAGE
 #--------------------------------------------#    
