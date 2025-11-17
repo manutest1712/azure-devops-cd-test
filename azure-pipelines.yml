@@ -165,6 +165,13 @@ stages:
                 #! /bin/bash
                 # Use current user's home directory to avoid permission issues
                 DIR=~/app
+
+                # Delete DIR if it exists
+                if [ -d "$DIR" ]; then
+                    echo "$DIR exist. Deleting it"
+                    rm -rf "$DIR"
+                fi
+
                 mkdir -p "$DIR"
 
                 # Move the artifact to DIR
