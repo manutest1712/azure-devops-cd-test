@@ -89,6 +89,7 @@ def add_all_products(driver):
     except Exception as e:
         print("⚠️ No items added to cart! Badge not found.")
         print("Error:", str(e))
+        assert False, f"Test failed: Cart badge should exist. Error: {e}"
 
 
 def remove_all_products(driver):
@@ -107,23 +108,29 @@ def remove_all_products(driver):
     for btn in remove_buttons:
         product_name = btn.get_attribute("id").replace("remove-", "")
         print(f"Removing item: {product_name}")
-        btn.click()
-        time.sleep(1)
+        driver.execute_script("arguments[0].click();", btn)
+
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.ID, f"add-to-cart-{product_name}"))
+        )
 
     print("All items successfully removed from the cart.")
 
     # Step 3: Validate cart badge again
     try:
+        # Wait for badge to disappear (cart empty)
+        WebDriverWait(driver, 5).until(
+            EC.invisibility_of_element_located((By.CSS_SELECTOR, ".shopping_cart_badge"))
+        )
+        print("Cart is empty — badge not visible (expected behavior).")
+
+    except:
+        # Badge still exists → check its count
         cart_badge = driver.find_element(By.CSS_SELECTOR, ".shopping_cart_badge")
         cart_count = cart_badge.text
         print("Items still in cart after removal:", cart_count)
 
-        # This should NOT happen
         assert cart_count == "0", f"Cart should be empty but found {cart_count}"
-
-    except:
-        # If badge does not exist, cart is empty → expected behavior
-        print("Cart is empty — badge not shown (expected behavior).")
 
 
 def run_test():
