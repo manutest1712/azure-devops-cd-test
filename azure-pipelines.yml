@@ -207,6 +207,9 @@ stages:
               script: |
                 set -e
 
+                echo $(Pipeline.Workspace)
+                ls -R $(Pipeline.Workspace)
+
                 # Download latest stable JMeter bundle (URL never changes)
                 echo "downloading jmeter"
                 wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
@@ -218,7 +221,7 @@ stages:
                 
                 ./apache-jmeter-5.6.3/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
                 cat jmeter.log                                                                           # ToDo: Write your commands
-              workingDirectory: $(Pipeline.Workspace)/drop-perftests
+              
 
   #--------------------------------------------#  
   # Selenium | Functional UI Tests
