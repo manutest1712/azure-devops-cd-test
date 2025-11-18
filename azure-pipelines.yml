@@ -199,8 +199,7 @@ stages:
               appName: demo-app-udacity
               appType: webAppLinux
               package: $(Pipeline.Workspace)/drop-fakerestapi-py/$(Build.BuildId)-fakerestapi-py.zip
-              startUpCommand: 'pip install -r requirements.txt && gunicorn --bind 0.0.0.0:8000 app:app'
-                                                                        # ToDo: Write your commands
+              # ToDo: Write your commands
   #--------------------------------------------#  
   # Selenium | Functional UI Tests
   # ToDo: 
