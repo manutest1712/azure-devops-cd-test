@@ -269,9 +269,29 @@ stages:
         script: |
           set -e
 
-          echo $(Pipeline.Workspace)
+          DIR="/var/log/jmeter"
 
+          echo "Pipeline Workspace: $(Pipeline.Workspace)"
+          echo "JMeter Log Directory: $DIR"
+
+          # Delete DIR if it exists
+          if [ -d "$DIR" ]; then
+              echo "$DIR exists. Deleting it..."
+              sudo rm -rf "$DIR"
+          fi
+
+          # Create DIR again
+          echo "Creating $DIR..."
+          sudo mkdir -p "$DIR"
+
+          # Give ownership to the current agent user
+          sudo chown $USER:$USER "$DIR"
+
+          echo "Unzipping test suite..."
           unzip -o $(Build.BuildId)-perftests.zip
-          
-          jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
-          cat jmeter.log
+
+          echo "Running JMeter..."
+          jmeter -n -t PerformanceTestSuite.jmx -j "$DIR/jmeter.log" -f
+
+          echo "JMeter log output:"
+          cat "$DIR/jmeter.log"
