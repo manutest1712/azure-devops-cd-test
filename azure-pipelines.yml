@@ -270,12 +270,8 @@ stages:
           set -e
 
           echo $(Pipeline.Workspace)
-          ls -R $(Pipeline.Workspace)
-
-          wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
-          tar -xf apache-jmeter-5.6.3.tgz
 
           unzip -o $(Build.BuildId)-perftests.zip
           
-          ./apache-jmeter-5.6.3/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
+          jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
           cat jmeter.log
