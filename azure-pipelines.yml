@@ -355,9 +355,18 @@ stages:
           mkdir -p "$(Pipeline.Workspace)/jmeter-results"
           cp -r /var/results/jmeter/* "$(Pipeline.Workspace)/jmeter-results/"
 
-    - task: PublishBuildArtifacts@1
-      displayName: "Publish All JMeter Files"
+    - task: ArchiveFiles@2
+      displayName: "Zip JMeter Results"
       inputs:
-        pathToPublish: "$(Pipeline.Workspace)/jmeter-results"
+        rootFolderOrFile: "$(Pipeline.Workspace)/jmeter-results"
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: "$(Build.ArtifactStagingDirectory)/jmeter-results.zip"
+        replaceExistingArchive: true
+
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish JMeter ZIP Artifact"
+      inputs:
+        pathToPublish: "$(Build.ArtifactStagingDirectory)/jmeter-results.zip"
         artifactName: "jmeter-results"
         publishLocation: "Container"
