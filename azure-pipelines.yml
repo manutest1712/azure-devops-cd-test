@@ -270,7 +270,7 @@ stages:
         script: |
           set -e
 
-          DIR="/var/log/jmeter"
+          DIR="/var/results/jmeter"
 
           echo "Pipeline Workspace: $(Pipeline.Workspace)"
           echo "JMeter Log Directory: $DIR"
@@ -316,7 +316,11 @@ stages:
           done
 
           echo "Running JMeter..."
-          jmeter -n -t PerformanceTestSuite.jmx -j "$DIR/jmeter.log" -f
+          jmeter -n \
+            -t EnduranceTestSuite.jmx \
+            -j "$DIR/jmeter.log" \
+            -l "$DIR/EnduranceTestSuite-results.jtl" \
+            -e -o "$DIR/html-report-EnduranceTestSuite"
 
           echo "JMeter log output:"
           cat "$DIR/jmeter.log"
