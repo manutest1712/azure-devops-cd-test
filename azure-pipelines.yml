@@ -323,7 +323,7 @@ stages:
             -t EnduranceTestSuite.jmx \
             -j "$DIR/jmeter-endurance.log" \
             -l "$DIR/EnduranceTestSuite-results.jtl" \
-            -e -o "$DIR/html-report-EnduranceTestSuite"
+            -e -o "$DIR/html-report-EnduranceTestSuite -Jjunit"
 
           echo "Executed JMeter Endurance Test Suite"
           echo "###################################"
@@ -336,7 +336,7 @@ stages:
             -t StressTestSuite.jmx \
             -j "$DIR/jmeter-stress.log" \
             -l "$DIR/StressTestSuite-results.jtl" \
-            -e -o "$DIR/html-report-StressTestSuite"
+            -e -o "$DIR/html-report-StressTestSuite -Jjunit"
 
           echo "Executed JMeter Stress Test Suite"
           echo "###################################"
@@ -346,3 +346,11 @@ stages:
 
           echo "JMeter stress log output:"
           cat "$DIR/jmeter-stress.log"
+    - task: PublishTestResults@2
+      displayName: 'Publish JMeter Test Results'
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '$(Pipeline.Workspace)/drop-perftests/var/results/jmeter/*.jtl'
+        failTaskOnFailedTests: true
+        mergeTestResults: true
+        testRunTitle: 'JMeter Load Test Results'
