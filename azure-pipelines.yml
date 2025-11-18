@@ -291,7 +291,8 @@ stages:
           echo "Unzipping test suite..."
           unzip -o $(Build.BuildId)-perftests.zip
 
-          API_URL="https://${webAppName}.azurewebsites.net/api/v1/Authors"
+          # Checking site readiness before executing jmeter
+          API_URL="https://$(webAppName).azurewebsites.net/api/v1/Authors"
           MAX_RETRIES=30
           SLEEP_TIME=5
 
