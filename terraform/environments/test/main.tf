@@ -105,3 +105,43 @@ module "web_app" {
 
   always_on = false
 }
+
+###############Alert Handling for the APP service ############################
+
+resource "azurerm_monitor_action_group" "jmeter_action_group" {
+  name                = "ag-jmeter-alerts"
+  resource_group_name = data.azurerm_resource_group.main.name
+  short_name          = "jmeter"
+
+  email_receiver {
+    name          = "alert-email"
+    email_address = "manugithub17121980@gmail.com"
+  }
+}
+
+
+resource "azurerm_monitor_metric_alert" "app_service_alert_404" {
+  name                = "alert-demo-app-http404"
+  resource_group_name = data.azurerm_resource_group.main.name
+  scopes              = [module.web_app.app_id]   # 🔥 IMPORTANT
+  description         = "Alert when App Service returns HTTP 404"
+
+  severity = 3
+  enabled  = true
+
+  frequency 		   = "PT1M"   # check every 1 minute
+  window_size          = "PT5M"   # evaluate last 5 minute
+
+  action {
+    action_group_id = azurerm_monitor_action_group.jmeter_action_group.id
+  }
+
+  criteria {
+    metric_namespace = "Microsoft.Web/sites"
+    metric_name      = "Http404"
+    aggregation      = "Total"
+    operator         = "GreaterThan"
+    threshold        = 1   # triggers when > 1 error occurs
+    # skip_metric_validation = true  # enable if Terraform fails metric verification
+  }
+}
