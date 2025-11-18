@@ -323,9 +323,8 @@ stages:
             -t EnduranceTestSuite.jmx \
             -j "$DIR/jmeter-endurance.log" \
             -l "$DIR/EnduranceTestSuite-results.jtl" \
-            -e -o "$DIR/html-report-EnduranceTestSuite" \
-            -Jjmeter.save.saveservice.output_format=xml \
-            -junitxmlreport="$DIR/EnduranceTestSuite-results.xml"
+            -e -o "$DIR/html-report-EnduranceTestSuite" 
+
 
           echo "Executed JMeter Endurance Test Suite"
           echo "###################################"
@@ -338,9 +337,7 @@ stages:
             -t StressTestSuite.jmx \
             -j "$DIR/jmeter-stress.log" \
             -l "$DIR/StressTestSuite-results.jtl" \
-            -e -o "$DIR/html-report-StressTestSuite" \
-            -Jjmeter.save.saveservice.output_format=xml \
-            -junitxmlreport="$DIR/StressTestSuite-results.xml"
+            -e -o "$DIR/html-report-StressTestSuite"
 
           echo "Executed JMeter Stress Test Suite"
           echo "###################################"
@@ -357,15 +354,6 @@ stages:
         script: |
           mkdir -p "$(Pipeline.Workspace)/jmeter-results"
           cp -r /var/results/jmeter/* "$(Pipeline.Workspace)/jmeter-results/"
-
-    - task: PublishTestResults@2
-      displayName: 'Publish JMeter Test Results'
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '$(Pipeline.Workspace)/jmeter-results/*.xml'
-        failTaskOnFailedTests: true
-        mergeTestResults: true
-        testRunTitle: 'JMeter Load Test Results'
 
     - task: PublishBuildArtifacts@1
       displayName: "Publish All JMeter Files"
