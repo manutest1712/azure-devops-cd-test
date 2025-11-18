@@ -315,12 +315,16 @@ stages:
               fi
           done
 
-          echo "Running JMeter..."
+          # Executing endurance test suite
+          echo "Running JMeter Endurance Test Suite"
+          
           jmeter -n \
             -t EnduranceTestSuite.jmx \
             -j "$DIR/jmeter.log" \
             -l "$DIR/EnduranceTestSuite-results.jtl" \
             -e -o "$DIR/html-report-EnduranceTestSuite"
+
+          echo "Executed JMeter Endurance Test Suite"
 
           echo "JMeter log output:"
           cat "$DIR/jmeter.log"
