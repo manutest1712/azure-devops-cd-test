@@ -13,12 +13,13 @@ variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   environmentName: "production"
   azureServiceConnectionId: 'DemoConnection'
-  webAppName: 'flaskwebapp123456'
+  webAppName: 'demo-app-udacity'
   backend_rg: 'AzureDevops'
   backend_stg: 'tfstateaccount2025manu'
   backend_container: 'tfstate'
   backend_key: 'test.terraform.tfstate'
   selinum_test_enviroment: 'test-selenium-env'
+
   
 stages:
 - stage: BuildStage
@@ -196,7 +197,7 @@ stages:
             displayName: 'Deploy Azure Web App'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
-              appName: demo-app-udacity
+              appName: $(webAppName)
               appType: webAppLinux
               package: $(Pipeline.Workspace)/drop-fakerestapi-py/$(Build.BuildId)-fakerestapi-py.zip
               # ToDo: Write your commands
@@ -289,6 +290,29 @@ stages:
 
           echo "Unzipping test suite..."
           unzip -o $(Build.BuildId)-perftests.zip
+
+          API_URL="https://${webAppName}.azurewebsites.net/api/v1/Authors"
+          MAX_RETRIES=30
+          SLEEP_TIME=5
+
+          echo "Waiting for API to return HTTP 200: $API_URL"
+
+          for i in $(seq 1 $MAX_RETRIES); do
+              STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$API_URL")
+
+              if [ "$STATUS" -eq 200 ]; then
+                  echo "API is up! (HTTP 200)"
+                  break
+              fi
+
+              echo "Attempt $i/$MAX_RETRIES: API returned $STATUS. Retrying in $SLEEP_TIME seconds..."
+              sleep $SLEEP_TIME
+
+              if [ $i -eq $MAX_RETRIES ]; then
+                  echo "API did not become ready after $MAX_RETRIES attempts."
+                  exit 1
+              fi
+          done
 
           echo "Running JMeter..."
           jmeter -n -t PerformanceTestSuite.jmx -j "$DIR/jmeter.log" -f
