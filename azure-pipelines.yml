@@ -316,15 +316,33 @@ stages:
           done
 
           # Executing endurance test suite
+          echo "###################################"
           echo "Running JMeter Endurance Test Suite"
           
           jmeter -n \
             -t EnduranceTestSuite.jmx \
-            -j "$DIR/jmeter.log" \
+            -j "$DIR/jmeter-endurance.log" \
             -l "$DIR/EnduranceTestSuite-results.jtl" \
             -e -o "$DIR/html-report-EnduranceTestSuite"
 
           echo "Executed JMeter Endurance Test Suite"
+          echo "###################################"
 
-          echo "JMeter log output:"
-          cat "$DIR/jmeter.log"
+          # Executing stress test suite
+          echo "###################################"
+          echo "Running JMeter stress Test Suite"
+          
+          jmeter -n \
+            -t StressTestSuite.jmx \
+            -j "$DIR/jmeter-stress.log" \
+            -l "$DIR/StressTestSuite-results.jtl" \
+            -e -o "$DIR/html-report-StressTestSuite"
+
+          echo "Executed JMeter Stress Test Suite"
+          echo "###################################"
+
+          echo "JMeter endurance log output:"
+          cat "$DIR/jmeter-endurance.log"
+
+          echo "JMeter stress log output:"
+          cat "$DIR/jmeter-stress.log"
