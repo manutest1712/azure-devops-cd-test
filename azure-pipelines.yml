@@ -346,11 +346,19 @@ stages:
 
           echo "JMeter stress log output:"
           cat "$DIR/jmeter-stress.log"
+    - task: Bash@3
+      displayName: 'Copy JMeter Results to Pipeline Workspace'
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p "$(Pipeline.Workspace)/jmeter-results"
+          cp -r /var/results/jmeter/*.jtl "$(Pipeline.Workspace)/jmeter-results/"
+
     - task: PublishTestResults@2
       displayName: 'Publish JMeter Test Results'
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '$(Pipeline.Workspace)/drop-perftests/var/results/jmeter/*.jtl'
+        testResultsFiles: '$(Pipeline.Workspace)/jmeter-results/*.jtl'
         failTaskOnFailedTests: true
         mergeTestResults: true
         testRunTitle: 'JMeter Load Test Results'
