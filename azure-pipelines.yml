@@ -352,7 +352,7 @@ stages:
         targetType: 'inline'
         script: |
           mkdir -p "$(Pipeline.Workspace)/jmeter-results"
-          cp -r /var/results/jmeter/*.jtl "$(Pipeline.Workspace)/jmeter-results/"
+          cp -r /var/results/jmeter/* "$(Pipeline.Workspace)/jmeter-results/"
 
     - task: PublishTestResults@2
       displayName: 'Publish JMeter Test Results'
