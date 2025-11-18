@@ -323,7 +323,8 @@ stages:
             -t EnduranceTestSuite.jmx \
             -j "$DIR/jmeter-endurance.log" \
             -l "$DIR/EnduranceTestSuite-results.jtl" \
-            -e -o "$DIR/html-report-EnduranceTestSuite -Jjunit"
+            -e -o "$DIR/html-report-EnduranceTestSuite\
+            -Jjmeter.save.saveservice.output_format=xml"
 
           echo "Executed JMeter Endurance Test Suite"
           echo "###################################"
@@ -336,7 +337,8 @@ stages:
             -t StressTestSuite.jmx \
             -j "$DIR/jmeter-stress.log" \
             -l "$DIR/StressTestSuite-results.jtl" \
-            -e -o "$DIR/html-report-StressTestSuite -Jjunit"
+            -e -o "$DIR/html-report-StressTestSuite
+            -Jjmeter.save.saveservice.output_format=xml"
 
           echo "Executed JMeter Stress Test Suite"
           echo "###################################"
