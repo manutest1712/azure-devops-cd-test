@@ -241,6 +241,11 @@ stages:
                 echo "Setting read permissions (755) for AMA"
                 sudo chmod 755 "$DIR"
 
+                echo "Restarting Azure Monitor Agent..."
+                sudo systemctl restart azuremonitoragent
+
+                echo "Azure Monitor Agent restarted successfully.
+
                 # Move the artifact to DIR
                 mv ~/azagent/_work/1/drop-uitests/$(Build.BuildId)-uitests.zip "$DIR/"
                 cd "$DIR"
