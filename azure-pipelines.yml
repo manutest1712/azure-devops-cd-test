@@ -244,7 +244,7 @@ stages:
                 echo "Restarting Azure Monitor Agent..."
                 sudo systemctl restart azuremonitoragent
 
-                echo "Azure Monitor Agent restarted successfully.
+                echo "Azure Monitor Agent restarted successfully."
 
                 # Move the artifact to DIR
                 mv ~/azagent/_work/1/drop-uitests/$(Build.BuildId)-uitests.zip "$DIR/"
