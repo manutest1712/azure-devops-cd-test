@@ -23,7 +23,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
           <collectionProp name="Arguments.arguments">
             <elementProp name="BASE_URL" elementType="Argument">
               <stringProp name="Argument.name">BASE_URL</stringProp>
@@ -45,7 +45,7 @@
           <stringProp name="variableNames"></stringProp>
         </CSVDataSet>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Authors" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Authors">
           <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.path">/api/v1/Authors/${id}</stringProp>
@@ -82,10 +82,34 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
             <stringProp name="ConstantTimer.delay">200</stringProp>
             <stringProp name="RandomTimer.range">300.0</stringProp>
           </UniformRandomTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get all authors-invalid">
+          <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">/api/v2/Authors/5</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="51512">404</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
           <hashTree/>
         </hashTree>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
