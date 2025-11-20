@@ -20,7 +20,29 @@ The result is a reliable, scalable, and automated solution that supports rapid d
 1. Navigate to your Azure DevOps organization settings
 2. Go to "Extensions" and then "Browse marketplace."
 3. Search for "Terraform" and locate the extension published by Microsoft DevLabs (or a suitable alternative if preferred)
-4. Install the extension into your Azure DevOps organization. This makes Terraform tasks available for use in your pipelines.                                                                              
+4. Install the extension into your Azure DevOps organization. This makes Terraform tasks available for use in your pipelines.   
+
+### Setup agents
+
+#### Setup agent image
+1. Navigate to the folder:
+    ```bash
+        azure-devops-cd-test\packer\agent-image
+    ```
+2. Open the file:
+    variables.pkrvars.hcl
+3. Update the required variables with your Azure details:
+    ```bash
+        client_id        = "xxxxxx"
+        client_secret    = "xxxxxx"
+        tenant_id        = "xxxxxx"
+        subscription_id  = "xxxxxx"
+    ```
+    **Note**: Do not commit variables.pkrvars.hcl to Git
+4. Run the following command to build the agent VM image:
+    ```bash
+        packer build -var-file="variables.pkrvars.hcl" packer-ci-vm.pkr.hcl
+    ```
 ### Terraform Backend Setup with Azure Storage
 This section explains how to set up a **Terraform remote backend** in **Azure** using a **storage account and blob container**. Storing the Terraform state remotely enables safe collaboration, state locking, and versioning.
 
