@@ -115,7 +115,7 @@ resource "azurerm_monitor_action_group" "jmeter_action_group" {
 
   email_receiver {
     name          = "alert-email"
-    email_address = "manugithub17121980@gmail.com"
+    email_address = var.alert_email
   }
 }
 

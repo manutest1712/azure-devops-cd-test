@@ -23,3 +23,8 @@ variable "resource_location" {
   type    = string
   default = "eastus"
 }
+
+variable "alert_email" {
+  type        = string
+  description = "Email address to receive alert notifications"
+}
