@@ -100,20 +100,22 @@ stages:
       - task: CmdLine@2
         displayName: Install Newman
         inputs:
-          script: 'npm install -g newman'
+          script: |
+            npm install -g newman
+            sudo npm install newman-reporter-junitfull -g 
           workingDirectory: $(System.DefaultWorkingDirectory)
       - task: CmdLine@2
         displayName: Run Data Validation Tests
         continueOnError: true
         inputs:
-          script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
+          script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junitfull-export TEST-DataValidation.xml'
           workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/postman
 
       - task: CmdLine@2
         displayName: Run Regression Tests
         continueOnError: true
         inputs:
-          script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
+          script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junitfull-export TEST-Regression.xml'
           workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/postman
 
       - task: PublishTestResults@2
