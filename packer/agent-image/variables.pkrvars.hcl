@@ -1,0 +1,6 @@
+client_id        = "xxxxxx"
+client_secret    = "xxxxxx"
+tenant_id        = "xxxxxx"
+subscription_id  = "xxxxxx"
+azdo_url         = "https://dev.azure.com/yourOrg"
+azdo_pat         = "yourPAT"
