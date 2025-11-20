@@ -15,12 +15,44 @@ The result is a reliable, scalable, and automated solution that supports rapid d
 
 ## Instructions
 
-### Install the Terraform Azure DevOps Extension
+### Setup Azure devops organization
+#### Step 1:  Create a Project
+Create a new Azure DevOps project named DemoProject.
+#### Step 2:  Create a Service Connection
+
+    1. Go to **Project Settings → Service connections**
+    2. Click **New service connection → Azure Resource Manager**
+    2. Choose **Service principal (manual)**
+    3. Enter your Azure authentication details:
+        a. Subscription ID
+        b. Tenant ID
+        c. Client ID
+        d. Client Secret
+    4. Name it: DemoConnection
+    5. Grant access permission to all pipelines.
+
+This service connection will be used by Terraform tasks to authenticate to Azure.
+
+#### Step 3:  Create a Self-Hosted Agent Pool
+You need a dedicated pool because the VM created by Terraform will register itself to this pool.
+
+    1. Go to **Project Settings → Agent Pools**
+    2. Click **Add pool**
+    3. Choose **Self-hosted** as the pool type.
+    4. Name it: myAgentPool
+    5. Grant access permission to all pipelines.
+
+**Note**: No need to add an agent manually — the infra setup will do that.
+
+
+#### Install the Terraform Azure DevOps Extension
 
 1. Navigate to your Azure DevOps organization settings
 2. Go to "Extensions" and then "Browse marketplace."
 3. Search for "Terraform" and locate the extension published by Microsoft DevLabs (or a suitable alternative if preferred)
 4. Install the extension into your Azure DevOps organization. This makes Terraform tasks available for use in your pipelines.   
+
+### Install the Terraform Azure DevOps Extension
 
 ### Setup agents
 
