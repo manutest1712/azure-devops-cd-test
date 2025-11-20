@@ -124,7 +124,7 @@ stages:
           testResultsFormat: 'JUnit'
           testResultsFiles: '**/TEST-*.xml'   # Matches TEST-DataValidation.xml and TEST-Regression.xml
           searchFolder: $(System.DefaultWorkingDirectory)/automatedtesting/postman
-          mergeTestResults: true
+          mergeTestResults: false
           testRunTitle: 'Postman Data Validation & Regression Tests'
 
       #--------------------------------------------#
