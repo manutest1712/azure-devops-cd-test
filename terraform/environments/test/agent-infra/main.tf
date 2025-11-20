@@ -16,6 +16,13 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
+provider "azapi" {
+  subscription_id = var.subscription_id
+  client_id       = var.client_id
+  client_secret   = var.client_secret
+  tenant_id       = var.tenant_id
+}
+
 data "azurerm_resource_group" "main" {
   name = "Azuredevops"
 }
@@ -231,7 +238,7 @@ resource "azurerm_linux_virtual_machine" "selenium_vm" {
   name                = "selenium-test-vm"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
-  size                = "Standard_B1s"
+  size                = "Standard_B2s"
   
   identity {
     type = "SystemAssigned"
@@ -279,7 +286,7 @@ output "selenium_vm_public_ip" {
 #############################################
 
 resource "azurerm_log_analytics_workspace" "law" {
-  name                = "law-selenium-udacity-xy"
+  name                = "law-selenium-udacity"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
   sku                 = "PerGB2018"
@@ -287,7 +294,7 @@ resource "azurerm_log_analytics_workspace" "law" {
 }
 
 resource "azurerm_monitor_data_collection_endpoint" "selenium_dce" {
-  name                = "selenium-dce-udacity-xy"
+  name                = "selenium-dce-udacity"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
 }
@@ -354,7 +361,7 @@ resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
       format = "text"  # can be json, text, csv
 	  
 	  streams = [
-		"Custom-SeleniumLogs_CL"
+		"Custom-${azapi_resource.data_collection_logs_table.name}"
       ]
 
       settings {
@@ -366,7 +373,7 @@ resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
   }
 
   data_flow {
-    streams      = ["Custom-SeleniumLogs_CL"]
+    streams      = ["Custom-${azapi_resource.data_collection_logs_table.name}"]
     destinations = ["law-destination"]
   }
 }
