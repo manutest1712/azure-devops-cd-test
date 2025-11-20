@@ -28,7 +28,7 @@ The result is a reliable, scalable, and automated solution that supports rapid d
 1. Navigate to the folder:
     azure-devops-cd-test\packer\agent-image foldder
 2. Open the file:
-    variables.pkrvars.hcl in an editor
+    variables.pkrvars.hcl
 3. Update the required variables with your Azure details:
     client_id        = "xxxxxx"
     client_secret    = "xxxxxx"
