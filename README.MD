@@ -26,19 +26,23 @@ The result is a reliable, scalable, and automated solution that supports rapid d
 
 #### Setup agent image
 1. Navigate to the folder:
-    azure-devops-cd-test\packer\agent-image foldder
+    ```bash
+        azure-devops-cd-test\packer\agent-image
+    ```
 2. Open the file:
     variables.pkrvars.hcl
 3. Update the required variables with your Azure details:
-    client_id        = "xxxxxx"
-    client_secret    = "xxxxxx"
-    tenant_id        = "xxxxxx"
-    subscription_id  = "xxxxxx"
+    ```bash
+        client_id        = "xxxxxx"
+        client_secret    = "xxxxxx"
+        tenant_id        = "xxxxxx"
+        subscription_id  = "xxxxxx"
+    ```
     **Note**: Do not commit variables.pkrvars.hcl to Git
 4. Run the following command to build the agent VM image:
-  ```bash
-    packer build -var-file="variables.pkrvars.hcl" packer-ci-vm.pkr.hcl
-  ```
+    ```bash
+        packer build -var-file="variables.pkrvars.hcl" packer-ci-vm.pkr.hcl
+    ```
 ### Terraform Backend Setup with Azure Storage
 This section explains how to set up a **Terraform remote backend** in **Azure** using a **storage account and blob container**. Storing the Terraform state remotely enables safe collaboration, state locking, and versioning.
 
