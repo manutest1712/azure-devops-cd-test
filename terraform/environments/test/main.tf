@@ -145,3 +145,54 @@ resource "azurerm_monitor_metric_alert" "app_service_alert_404" {
     # skip_metric_validation = true  # enable if Terraform fails metric verification
   }
 }
+
+
+###############Alert Handling for seleneum log ############################
+data "azurerm_log_analytics_workspace" "law" {
+  name                = "law-selenium-udacity-x"
+  resource_group_name = data.azurerm_resource_group.main.name
+}
+
+
+resource "azurerm_monitor_action_group" "seleneum_action_group" {
+  name                = "ag-selenium-alerts"
+  resource_group_name = data.azurerm_resource_group.main.name
+  short_name          = "sel-alert"
+
+  email_receiver {
+    name          = "alert-email"
+    email_address = var.alert_email
+  }
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "selenium_fail_alert" {
+  name                = "alert-selenium-log-failure"
+  resource_group_name = data.azurerm_resource_group.main.name
+  location            = var.resource_location
+  
+  scopes = [data.azurerm_log_analytics_workspace.law.id]
+  
+  evaluation_frequency = "PT5M"
+  window_duration      = "PT5M"
+
+  enabled     = true
+  severity    = 1
+  criteria {
+    # The KQL Query to run
+    query = <<-QUERY
+      SeleniumLogs_CL
+      | where RawData contains "Launching Chrome browser"
+    QUERY
+
+    # Trigger logic: If Count > 0
+    operator                = "GreaterThan"
+    threshold               = 0
+    time_aggregation_method = "Count"
+    
+  }
+  
+  # Link the Alert to the Action Group created above
+  action {
+    action_groups = [azurerm_monitor_action_group.seleneum_action_group.id]
+  }
+}
