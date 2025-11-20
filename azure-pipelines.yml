@@ -102,7 +102,7 @@ stages:
         inputs:
           script: |
             npm install -g newman
-            sudo npm install newman-reporter-junitfull -g 
+            npm install -g newman-reporter-junitfull
           workingDirectory: $(System.DefaultWorkingDirectory)
       - task: CmdLine@2
         displayName: Run Data Validation Tests
