@@ -20,8 +20,8 @@ The result is a reliable, scalable, and automated solution that supports rapid d
 Create a new Azure DevOps project named DemoProject.
 #### Step 2:  Create a Service Connection
 
-    1. Go to **Project Settings → Service connections**
-    2. Click **New service connection → Azure Resource Manager**
+    1. Go to **Project Settings** → **Service connections**
+    2. Click **New service connection** → **Azure Resource Manager**
     2. Choose **Service principal (manual)**
     3. Enter your Azure authentication details:
         a. Subscription ID
