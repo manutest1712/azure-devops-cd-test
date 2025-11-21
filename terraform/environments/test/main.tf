@@ -6,6 +6,11 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.70"
     }
+	
+	azapi = {
+      source  = "Azure/azapi"
+      version = "~> 1.13.0"
+    }
   }
   
    backend "azurerm" {
@@ -25,64 +30,16 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
+provider "azapi" {
+  subscription_id = var.subscription_id
+  client_id       = var.client_id
+  client_secret   = var.client_secret
+  tenant_id       = var.tenant_id
+}
+
+
 data "azurerm_resource_group" "main" {
   name = "Azuredevops"
-}
-
-
-# Public IP
-/*resource "azurerm_public_ip" "demo_vm_ip" {
-  name                = "demo-vm-public-ip"
-  location            = var.resource_location
-  resource_group_name = data.azurerm_resource_group.main.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
-*/
-
-module "public_ip" {
-  source              = "../../modules/public-ip"
-  name                = "demo-vm-public-ip"
-  location            = var.resource_location
-  resource_group_name = data.azurerm_resource_group.main.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
-
-module "network" {
-  source = "../../modules/network"
-
-  location            = var.resource_location
-  resource_group_name = data.azurerm_resource_group.main.name
-
-  vnet_name          = "demo-vnet"
-  vnet_address_space = "10.90.0.0/16"
-
-  subnet_name   = "demo-subnet"
-  subnet_prefix = "10.90.1.0/24"
-
-  nsg_name = "demo-nsg"
-
-  nic_name = "demo-nic"
-
-  public_ip_id = module.public_ip.public_ip_id
-}
-
-
-module "vm" {
-  source = "../../modules/vm"
-
-  vm_name            = "demo-vm"
-  location           = var.resource_location
-  resource_group_name = data.azurerm_resource_group.main.name
-
-  vm_size = "Standard_B1s"
-  nic_id  = module.network.nic_id
-
-  admin_username = "ManuMP"
-  admin_password = "Staple17121980@"
-
-  disable_password_authentication = false
 }
 
 
@@ -105,6 +62,146 @@ module "web_app" {
 
   always_on = false
 }
+
+
+#############################################
+# Log analytics for selinium logs
+#############################################
+
+data "azurerm_virtual_machine" "selenium_vm" {
+  name                = "selenium-test-vm"
+  resource_group_name = data.azurerm_resource_group.main.name
+}
+
+resource "azurerm_log_analytics_workspace" "law" {
+  name                = "law-selenium-udacity"
+  location            = var.resource_location
+  resource_group_name = data.azurerm_resource_group.main.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_monitor_data_collection_endpoint" "selenium_dce" {
+  name                = "selenium-dce-udacity"
+  location            = var.resource_location
+  resource_group_name = data.azurerm_resource_group.main.name
+}
+
+
+resource "azapi_resource" "data_collection_logs_table" {
+  name      = "SeleniumLogs_CL"
+  parent_id = azurerm_log_analytics_workspace.law.id
+  type      = "Microsoft.OperationalInsights/workspaces/tables@2022-10-01"
+
+  body = jsonencode({
+    properties = {
+      schema = {
+        name = "SeleniumLogs_CL"
+        columns = [
+          {
+            name        = "TimeGenerated"
+            type        = "datetime"
+            description = "Log timestamp"
+          },
+          {
+            name        = "RawData"
+            type        = "string"
+            description = "Entire raw log line"
+          }
+        ]
+      }
+      retentionInDays      = 30
+      totalRetentionInDays = 30
+    }
+  })
+}
+
+
+resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
+
+  name                = "selenium-custom-log-dcr"
+  location            = var.resource_location
+  resource_group_name = data.azurerm_resource_group.main.name
+  data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.selenium_dce.id
+
+	# Explicit dependency
+	
+  depends_on = [
+    azurerm_monitor_data_collection_endpoint.selenium_dce,
+	azapi_resource.data_collection_logs_table
+  ]
+  
+  destinations {
+    log_analytics {
+      workspace_resource_id = azurerm_log_analytics_workspace.law.id
+      name                  = "law-destination"
+    }
+  }
+
+  data_sources {
+    log_file {
+      name = "selenium-file-source"
+
+      file_patterns = [
+        "/var/log/selenium/*.log"
+      ]
+
+      format = "text"  # can be json, text, csv
+	  
+	  streams = [
+		"Custom-${azapi_resource.data_collection_logs_table.name}"
+      ]
+
+      settings {
+        text {
+          record_start_timestamp_format = "ISO 8601"
+        }
+      }
+    }
+  }
+
+  data_flow {
+    streams      = ["Custom-${azapi_resource.data_collection_logs_table.name}"]
+    destinations = ["law-destination"]
+  }
+}
+
+
+resource "azurerm_virtual_machine_extension" "ama" {
+  name                 = "AzureMonitorLinuxAgent"
+  virtual_machine_id   = data.azurerm_virtual_machine.selenium_vm.id
+  publisher            = "Microsoft.Azure.Monitor"
+  type                 = "AzureMonitorLinuxAgent"
+  type_handler_version = "1.0"
+  auto_upgrade_minor_version = true
+  
+  depends_on = [
+    azurerm_monitor_data_collection_rule.selenium_dcr,
+  ]
+}
+
+
+
+resource "azurerm_monitor_data_collection_rule_association" "dcr_vm" {
+  name                    = "selenium-dcr-association"
+  target_resource_id      = data.azurerm_virtual_machine.selenium_vm.id
+  data_collection_rule_id = azurerm_monitor_data_collection_rule.selenium_dcr.id
+  
+  depends_on = [
+    azurerm_virtual_machine_extension.ama
+  ]
+}
+
+resource "azurerm_monitor_data_collection_rule_association" "dce_vm" {
+  name                         = "configurationAccessEndpoint"
+  target_resource_id           = data.azurerm_virtual_machine.selenium_vm.id
+  data_collection_endpoint_id  = azurerm_monitor_data_collection_endpoint.selenium_dce.id
+  
+    depends_on = [
+    azurerm_virtual_machine_extension.ama
+  ]
+}
+
 
 ###############Alert Handling for the APP service ############################
 
@@ -148,11 +245,6 @@ resource "azurerm_monitor_metric_alert" "app_service_alert_404" {
 
 
 ###############Alert Handling for seleneum log ############################
-data "azurerm_log_analytics_workspace" "law" {
-  name                = "law-selenium-udacity"
-  resource_group_name = data.azurerm_resource_group.main.name
-}
-
 
 resource "azurerm_monitor_action_group" "seleneum_action_group" {
   name                = "ag-selenium-alerts"
@@ -170,7 +262,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "selenium_fail_alert" 
   resource_group_name = data.azurerm_resource_group.main.name
   location            = var.resource_location
   
-  scopes = [data.azurerm_log_analytics_workspace.law.id]
+  scopes = [azurerm_log_analytics_workspace.law.id]
   
   evaluation_frequency = "PT5M"
   window_duration      = "PT5M"
