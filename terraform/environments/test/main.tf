@@ -73,12 +73,11 @@ data "azurerm_virtual_machine" "selenium_vm" {
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
-resource "azurerm_log_analytics_workspace" "law" {
+module "log_analytics" {
+  source              = "../../modules/log-analytics-workspace"
   name                = "law-selenium-udacity"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
 }
 
 resource "azurerm_monitor_data_collection_endpoint" "selenium_dce" {
@@ -90,7 +89,7 @@ resource "azurerm_monitor_data_collection_endpoint" "selenium_dce" {
 
 resource "azapi_resource" "data_collection_logs_table" {
   name      = "SeleniumLogs_CL"
-  parent_id = azurerm_log_analytics_workspace.law.id
+  parent_id = module.log_analytics.workspace_id
   type      = "Microsoft.OperationalInsights/workspaces/tables@2022-10-01"
 
   body = jsonencode({
@@ -133,7 +132,7 @@ resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
   
   destinations {
     log_analytics {
-      workspace_resource_id = azurerm_log_analytics_workspace.law.id
+      workspace_resource_id = module.log_analytics.workspace_id
       name                  = "law-destination"
     }
   }
@@ -262,7 +261,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "selenium_fail_alert" 
   resource_group_name = data.azurerm_resource_group.main.name
   location            = var.resource_location
   
-  scopes = [azurerm_log_analytics_workspace.law.id]
+  scopes = [module.log_analytics.workspace_id]
   
   evaluation_frequency = "PT5M"
   window_duration      = "PT5M"
