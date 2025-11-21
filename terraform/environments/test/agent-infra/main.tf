@@ -279,7 +279,7 @@ output "selenium_vm_public_ip" {
   value = azurerm_public_ip.selenium_ip.ip_address
 }
 
-
+/*
 
 #############################################
 # Log analytics for selinium logs
@@ -416,5 +416,5 @@ resource "azurerm_monitor_data_collection_rule_association" "dce_vm" {
 }
 
 
-
+*/
 
