@@ -149,7 +149,7 @@ resource "azurerm_monitor_metric_alert" "app_service_alert_404" {
 
 ###############Alert Handling for seleneum log ############################
 data "azurerm_log_analytics_workspace" "law" {
-  name                = "law-selenium-udacity-x"
+  name                = "law-selenium-udacity"
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
