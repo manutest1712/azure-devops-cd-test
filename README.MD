@@ -22,7 +22,7 @@ Create a new Azure DevOps project named DemoProject.
 
     1. Go to **Project Settings** → **Service connections**
     2. Click **New service connection** → **Azure Resource Manager**
-    2. Choose **Service principal (manual)**
+    2. Choose **App Registration or managed identity(manual) **
     3. Enter your Azure authentication details:
         a. Subscription ID
         b. Tenant ID
