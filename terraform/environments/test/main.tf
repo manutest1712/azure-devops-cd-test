@@ -100,12 +100,28 @@ module "selenium_log_table" {
   ]
 }
 
+module "data_collection" {
+  source              = "../../modules/data-collection-vm"
+  name                = "selenium-dc"
+  location            = var.resource_location
+  resource_group_name = data.azurerm_resource_group.main.name
 
+  workspace_id        = module.log_analytics.workspace_id
+  table_name          = module.selenium_log_table.name
+  vm_id               = data.azurerm_virtual_machine.selenium_vm.id
+  log_paths			  = ["/var/log/selenium/*.log"]
+
+  table_dependency = module.selenium_log_table
+}
+
+
+/*
 resource "azurerm_monitor_data_collection_endpoint" "selenium_dce" {
   name                = "selenium-dce-udacity"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
 }
+
 
 
 resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
@@ -158,6 +174,7 @@ resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
 }
 
 
+
 resource "azurerm_virtual_machine_extension" "ama" {
   name                 = "AzureMonitorLinuxAgent"
   virtual_machine_id   = data.azurerm_virtual_machine.selenium_vm.id
@@ -170,6 +187,7 @@ resource "azurerm_virtual_machine_extension" "ama" {
     azurerm_monitor_data_collection_rule.selenium_dcr,
   ]
 }
+
 
 
 
@@ -192,7 +210,7 @@ resource "azurerm_monitor_data_collection_rule_association" "dce_vm" {
     azurerm_virtual_machine_extension.ama
   ]
 }
-
+*/
 
 ###############Alert Handling for the APP service ############################
 
