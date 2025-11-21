@@ -125,31 +125,12 @@ module "action_group_app" {
   email_address       = var.alert_email
 }
 
-
-resource "azurerm_monitor_metric_alert" "app_service_alert_404" {
-  name                = "alert-demo-app-http404"
-  resource_group_name = data.azurerm_resource_group.main.name
-  scopes              = [module.web_app.app_id]   # 🔥 IMPORTANT
-  description         = "Alert when App Service returns HTTP 404"
-
-  severity = 3
-  enabled  = true
-
-  frequency 		   = "PT1M"   # check every 1 minute
-  window_size          = "PT5M"   # evaluate last 5 minute
-
-  action {
-    action_group_id = module.action_group_app.action_group_id
-  }
-
-  criteria {
-    metric_namespace = "Microsoft.Web/sites"
-    metric_name      = "Http404"
-    aggregation      = "Total"
-    operator         = "GreaterThan"
-    threshold        = 1   # triggers when > 1 error occurs
-    # skip_metric_validation = true  # enable if Terraform fails metric verification
-  }
+module "app_service_alerts" {
+  source               = "../../modules/app-service-alerts"
+  alert_name           = "alert-demo-app-http404"
+  resource_group_name  = data.azurerm_resource_group.main.name
+  app_id               = module.web_app.app_id
+  action_group_id      = module.action_group_app.action_group_id
 }
 
 
