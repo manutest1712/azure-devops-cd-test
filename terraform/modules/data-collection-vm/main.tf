@@ -63,7 +63,7 @@ resource "azurerm_monitor_data_collection_rule_association" "dcr_vm" {
 }
 
 resource "azurerm_monitor_data_collection_rule_association" "dce_vm" {
-  name                        = "endpoint-association"
+  name                        = "configurationAccessEndpoint"
   target_resource_id          = var.vm_id
   data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.dce.id
   depends_on = [
