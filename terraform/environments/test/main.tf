@@ -117,15 +117,12 @@ module "data_collection" {
 
 ###############Alert Handling for the APP service ############################
 
-resource "azurerm_monitor_action_group" "jmeter_action_group" {
-  name                = "ag-jmeter-alerts"
+module "action_group_app" {
+  source              = "../../modules/email-action-group"
+  name                = "ag-appservice-alerts"
   resource_group_name = data.azurerm_resource_group.main.name
   short_name          = "jmeter"
-
-  email_receiver {
-    name          = "alert-email"
-    email_address = var.alert_email
-  }
+  email_address       = var.alert_email
 }
 
 
@@ -142,7 +139,7 @@ resource "azurerm_monitor_metric_alert" "app_service_alert_404" {
   window_size          = "PT5M"   # evaluate last 5 minute
 
   action {
-    action_group_id = azurerm_monitor_action_group.jmeter_action_group.id
+    action_group_id = module.action_group_app.action_group_id
   }
 
   criteria {
@@ -158,15 +155,12 @@ resource "azurerm_monitor_metric_alert" "app_service_alert_404" {
 
 ###############Alert Handling for seleneum log ############################
 
-resource "azurerm_monitor_action_group" "seleneum_action_group" {
+module "action_group_selenium" {
+  source              = "../../modules/email-action-group"
   name                = "ag-selenium-alerts"
   resource_group_name = data.azurerm_resource_group.main.name
   short_name          = "sel-alert"
-
-  email_receiver {
-    name          = "alert-email"
-    email_address = var.alert_email
-  }
+  email_address       = var.alert_email
 }
 
 resource "azurerm_monitor_scheduled_query_rules_alert_v2" "selenium_fail_alert" {
@@ -197,6 +191,6 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "selenium_fail_alert" 
   
   # Link the Alert to the Action Group created above
   action {
-    action_groups = [azurerm_monitor_action_group.seleneum_action_group.id]
+    action_groups = [module.action_group_selenium.action_group_id]
   }
 }
