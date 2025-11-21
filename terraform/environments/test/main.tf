@@ -112,6 +112,10 @@ module "data_collection" {
   log_paths			  = ["/var/log/selenium/*.log"]
 
   table_dependency = module.selenium_log_table
+  
+   depends_on = [
+    module.selenium_log_table
+  ]
 }
 
 
@@ -144,34 +148,17 @@ module "action_group_selenium" {
   email_address       = var.alert_email
 }
 
-resource "azurerm_monitor_scheduled_query_rules_alert_v2" "selenium_fail_alert" {
+module "selenium_log_alert" {
+  source              = "../../modules/log-alert-rule"
   name                = "alert-selenium-log-failure"
-  resource_group_name = data.azurerm_resource_group.main.name
   location            = var.resource_location
-  
-  scopes = [module.log_analytics.workspace_id]
-  
-  evaluation_frequency = "PT5M"
-  window_duration      = "PT5M"
+  resource_group_name = data.azurerm_resource_group.main.name
 
-  enabled     = true
-  severity    = 1
-  criteria {
-    # The KQL Query to run
-    query = <<-QUERY
-      SeleniumLogs_CL
-      | where RawData contains "Launching Chrome browser"
-    QUERY
+  workspace_id        = module.log_analytics.workspace_id
+  action_group_id     = module.action_group_selenium.action_group_id
+  table_name          = module.selenium_log_table.name
 
-    # Trigger logic: If Count > 0
-    operator                = "GreaterThan"
-    threshold               = 0
-    time_aggregation_method = "Count"
-    
-  }
-  
-  # Link the Alert to the Action Group created above
-  action {
-    action_groups = [module.action_group_selenium.action_group_id]
-  }
+  depends_on = [
+    module.selenium_log_table
+  ]
 }
