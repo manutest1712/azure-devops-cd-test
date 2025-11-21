@@ -135,6 +135,9 @@ module "app_service_alerts" {
   resource_group_name  = data.azurerm_resource_group.main.name
   app_id               = module.web_app.app_id
   action_group_id      = module.action_group_app.action_group_id
+  depends_on = [
+    module.web_app
+  ]
 }
 
 
