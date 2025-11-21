@@ -80,39 +80,31 @@ module "log_analytics" {
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
+
+module "selenium_log_table" {
+  source        = "../../modules/log-table"
+  workspace_id  = module.log_analytics.workspace_id
+  table_name    = "SeleniumLogs_CL"
+
+  columns = [
+    {
+      name        = "TimeGenerated"
+      type        = "datetime"
+      description = "Log timestamp"
+    },
+    {
+      name        = "RawData"
+      type        = "string"
+      description = "Entire raw log line"
+    }
+  ]
+}
+
+
 resource "azurerm_monitor_data_collection_endpoint" "selenium_dce" {
   name                = "selenium-dce-udacity"
   location            = var.resource_location
   resource_group_name = data.azurerm_resource_group.main.name
-}
-
-
-resource "azapi_resource" "data_collection_logs_table" {
-  name      = "SeleniumLogs_CL"
-  parent_id = module.log_analytics.workspace_id
-  type      = "Microsoft.OperationalInsights/workspaces/tables@2022-10-01"
-
-  body = jsonencode({
-    properties = {
-      schema = {
-        name = "SeleniumLogs_CL"
-        columns = [
-          {
-            name        = "TimeGenerated"
-            type        = "datetime"
-            description = "Log timestamp"
-          },
-          {
-            name        = "RawData"
-            type        = "string"
-            description = "Entire raw log line"
-          }
-        ]
-      }
-      retentionInDays      = 30
-      totalRetentionInDays = 30
-    }
-  })
 }
 
 
@@ -127,7 +119,7 @@ resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
 	
   depends_on = [
     azurerm_monitor_data_collection_endpoint.selenium_dce,
-	azapi_resource.data_collection_logs_table
+	module.selenium_log_table
   ]
   
   destinations {
@@ -148,7 +140,7 @@ resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
       format = "text"  # can be json, text, csv
 	  
 	  streams = [
-		"Custom-${azapi_resource.data_collection_logs_table.name}"
+		"Custom-${module.selenium_log_table.name}"
       ]
 
       settings {
@@ -160,7 +152,7 @@ resource "azurerm_monitor_data_collection_rule" "selenium_dcr" {
   }
 
   data_flow {
-    streams      = ["Custom-${azapi_resource.data_collection_logs_table.name}"]
+    streams      = ["Custom-${module.selenium_log_table.name}"]
     destinations = ["law-destination"]
   }
 }
