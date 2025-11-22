@@ -4,6 +4,20 @@ This project implements a complete CI/CD pipeline using **Azure DevOps**, provis
 
 ---
 
+## 🧩 Pipeline Workflow
+
+| Stage | Purpose |
+|-------|---------|
+| 🏗 Build & Provision | Terraform installation, configuration, and infrastructure apply |
+| 🧪 API Testing | Postman tests executed via Newman |
+| 🖥 UI Testing | Selenium functional testing executed on virtual machine |
+| 📦 Artifact Packaging | Archives and uploads automation test bundles |
+| 🚀 Deployment | Web App deployed to Azure with service connection |
+| ⚡ Load Testing | JMeter endurance + stress scenarios executed |
+| 📊 Reporting | Test results and HTML output uploaded as artifacts |
+
+---
+
 ## Project Plan
 
 [Trello board for the Housing Trend Project Planner](https://trello.com/b/9a9XvYIE/fask-housing-trend-weekly-plan)
