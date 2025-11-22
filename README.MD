@@ -187,7 +187,7 @@ Once deployment completes:
 - A virtual machine will be provisioned and configured for use as a **build execution environment**.
 - Azure Storage Account created for storing Azure Pipeline Terraform state.
 
-
+---
 
 
 #### Install the Terraform Azure DevOps Extension
