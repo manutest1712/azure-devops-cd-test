@@ -108,28 +108,26 @@ Before proceeding, ensure you have:
 This connection will be used by Terraform tasks to authenticate to Azure.
 1. Go to **Project Settings** → **Service connections**
 2. Click **New service connection** → **Azure Resource Manager**
-3. Choose **App Registration** or **Managed Identity (Manual)**
-4. Enter your Azure authentication details:
+3. Choose **Identity Type** as **App Registrationor Managed Identity (Manual)**
+4. Choose **Credential** as **Secret**
+5. Enter your Azure authentication details:
    - Subscription ID  
    - Tenant ID  
    - Client ID  
    - Client Secret
-5. Name it: `DemoConnection`
-6. Enable: **Grant access permission to all pipelines**
+6. Name it: `DemoConnection`
+7. Enable: **Grant access permission to all pipelines**
 
-This service connection will be used by Terraform tasks to authenticate to Azure.
+##### ✔️ Step 3: Create a Self-Hosted Agent Pool
+The virtual machine deployed via Terraform will automatically register itself as an agent in this pool.
 
-#### Step 3:  Create a Self-Hosted Agent Pool
-You need a dedicated pool because the VM created by Terraform will register itself to this pool.
+1. Go to **Project Settings → Agent Pools**
+2. Select **Add pool**
+3. Choose **Self-hosted** as the pool type
+4. Name it: `myAgentPool`
+5. Enable: **Grant access permission to all pipelines**
 
-    1. Go to **Project Settings → Agent Pools**
-    2. Click **Add pool**
-    3. Choose **Self-hosted** as the pool type.
-    4. Name it: myAgentPool
-    5. Grant access permission to all pipelines.
-
-**Note**: No need to add an agent manually — the infra setup will do that.
-
+⚠️ **Note:** Do not manually add agents. The Terraform infrastructure will register the agent automatically.
 
 #### Install the Terraform Azure DevOps Extension
 
