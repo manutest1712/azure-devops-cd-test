@@ -218,6 +218,17 @@ From the Azure DevOps **Pipelines → Environments** page:
 
 > 📌 Note: The Virtual Machine will not appear in Azure DevOps until the generated registration script is executed on the target Linux VM.
 
+#### 2️⃣ Run the Registration Script on the VM
+* SSH into your virtual machine:
+   ```bash
+   ssh youruser@<VM_PUBLIC_IP>
+   ```
+* Paste the copied script into the terminal and run it. The script will handle:
+    * Downloading the agent.
+    * Configuring the agent to connect back to your Azure DevOps organization and the `test-selenium-env` environment.
+* When prompted with **Enter Environment Virtual Machine resource tags? (Y/N) (press enter for N)**, type **Y** and press **Enter**
+* When prompted with **Enter Comma separated list of tags (e.g web, db)**, type **selenium** and press **Enter**.
+
 
 #### Install the Terraform Azure DevOps Extension
 
