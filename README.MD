@@ -106,14 +106,6 @@ Before proceeding, ensure you have:
 
 ##### ✔️ Step 2: Create a Service Connection
 This connection will be used by Terraform tasks to authenticate to Azure.
-
-
-### Step 1: Create a Project
-### Setup Azure devops organization
-#### Step 1:  Create a Project
-Create a new Azure DevOps project named DemoProject.
-#### Step 2:  Create a Service Connection
-
 1. Go to **Project Settings** → **Service connections**
 2. Click **New service connection** → **Azure Resource Manager**
 3. Choose **App Registration** or **Managed Identity (Manual)**
