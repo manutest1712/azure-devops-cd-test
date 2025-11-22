@@ -31,6 +31,35 @@ This project implements a complete CI/CD pipeline using **Azure DevOps**, provis
 
 ---
 
+## 📂 Pipeline Outputs
+
+- 📄 Automated Test Reports (JUnit Format)
+- 📦 Archived Selenium, Postman & JMeter bundles
+- 📊 Performance logs & HTML dashboards
+
+---
+
+## ✔ Requirements
+
+- Azure DevOps Service Connection configured
+- Terraform backend storage provisioned
+- Secure secret variables stored in pipeline settings
+
+---
+
+## 🏁 CI/CD Summary
+
+This pipeline automates:
+
+- Infrastructure provisioning
+- Application deployment
+- End-to-end testing validation
+- Performance analysis
+- Artifact archiving and publishing
+
+> **Result: A fully automated DevOps workflow supporting continuous delivery and quality assurance.**
+
+
 ## Instructions
 
 ### Setup Azure devops organization
