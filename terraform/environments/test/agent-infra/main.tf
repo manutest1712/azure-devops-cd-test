@@ -418,3 +418,24 @@ resource "azurerm_monitor_data_collection_rule_association" "dce_vm" {
 
 */
 
+# Storage Account for Terraform State
+resource "azurerm_storage_account" "tfstate" {
+  name                     = "tfstateaccount2025manu" # must be globally unique
+  resource_group_name      = data.azurerm_resource_group.main.name
+  location                 = var.resource_location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  blob_properties {
+    container_delete_retention_policy {
+      days = 7
+    }
+  }
+}
+
+# Storage Container for Terraform State
+resource "azurerm_storage_container" "tfstate_container" {
+  name                  = "tfstate"
+  storage_account_id    = azurerm_storage_account.tfstate.id
+  container_access_type = "private"
+}
