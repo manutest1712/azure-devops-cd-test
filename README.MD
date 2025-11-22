@@ -184,7 +184,8 @@ This token will be used by the VM agent to authenticate with Azure DevOps.
 Once deployment completes:
 
 - The virtual machine will automatically register itself as a **self-hosted agent** in the selected Azure DevOps agent pool.
-- A VM will be provisioned and configured for use as a **build execution environment**.
+- A virtual machine will be provisioned and configured for use as a **build execution environment**.
+- Azure Storage Account created for storing Azure Pipeline Terraform state.
 
 
 
