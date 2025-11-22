@@ -62,6 +62,28 @@ This pipeline automates:
 
 ## Instructions
 
+### Setup agents
+
+#### Create Build Agent Image with Packer
+1. Navigate to the folder:
+    ```bash
+        azure-devops-cd-test\packer\agent-image
+    ```
+2. Open the file variables.pkrvars.hcl and update the Azure authentication fields:
+    ```bash
+        client_id        = "xxxxxx"
+        client_secret    = "xxxxxx"
+        tenant_id        = "xxxxxx"
+        subscription_id  = "xxxxxx"
+    ```
+    ⚠️ **Important**: **Do NOT** commit variables.pkrvars.hcl to source control. Add it to .gitignore to prevent accidental secrets exposure
+3. Build the VM image using Packer:
+    ```bash
+        packer build -var-file="variables.pkrvars.hcl" packer-ci-vm.pkr.hcl
+    ```
+Once the build completes, the custom image will be available in Azure and later used by Terraform to provision the self-hosted CI agent VM.
+---
+
 ### Setup Azure devops organization
 #### Step 1:  Create a Project
 Create a new Azure DevOps project named DemoProject.
@@ -91,27 +113,6 @@ You need a dedicated pool because the VM created by Terraform will register itse
 
 **Note**: No need to add an agent manually — the infra setup will do that.
 
-### Setup agents
-
-#### Setup agent image
-1. Navigate to the folder:
-    ```bash
-        azure-devops-cd-test\packer\agent-image
-    ```
-2. Open the file:
-    variables.pkrvars.hcl
-3. Update the required variables with your Azure details:
-    ```bash
-        client_id        = "xxxxxx"
-        client_secret    = "xxxxxx"
-        tenant_id        = "xxxxxx"
-        subscription_id  = "xxxxxx"
-    ```
-    **Note**: Do not commit variables.pkrvars.hcl to Git
-4. Run the following command to build the agent VM image:
-    ```bash
-        packer build -var-file="variables.pkrvars.hcl" packer-ci-vm.pkr.hcl
-    ```
 
 #### Install the Terraform Azure DevOps Extension
 
