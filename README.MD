@@ -189,6 +189,39 @@ Once deployment completes:
 
 ---
 
+### ⚙️ Azure DevOps Environment Setup
+This section details the steps necessary to create a new Azure DevOps **Environment** and link a **Linux Virtual Machine** as a deployment target using a self-hosted agent.
+
+### 🧩 Environment Configuration
+
+| Setting             | Value                                        |
+| ------------------- | -------------------------------------------- |
+| 🌍 Environment Name | `test-selenium-env`                          |
+| 🖥 VM Resource Name | `selenium-test-vm`                           |
+| 🏷 Purpose          | Execute Selenium automated UI test pipelines |
+
+
+### 🚀 Steps to Configure
+
+#### 1️⃣ Create Azure DevOps Environment
+
+Starting from the Azure DevOps **Piplenines →Environments** page:
+
+1.  Click the **Create environment** button. 
+2.  In the dialog box that appears:
+    * **Name:** Enter the required name: `test-selenium-env`
+    * **Description:** (Optional) Enter a brief description, such as: `Environment for Selenium UI testing on Linux VM.`
+    * **Resource:** Select Virtual Machines
+3.  Click **Create**.
+
+| Action      | Details                      |
+| ----------- | ---------------------------- |
+| Path        | **Pipelines → Environments** |
+| Option      | Click **Create environment** |
+| Name        | Enter: `test-selenium-env`   |
+| Type        | Default (**None**)           |
+| Description | *(Optional)*                 |
+
 
 #### Install the Terraform Azure DevOps Extension
 
