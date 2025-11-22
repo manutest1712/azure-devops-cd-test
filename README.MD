@@ -82,6 +82,7 @@ This pipeline automates:
         packer build -var-file="variables.pkrvars.hcl" packer-ci-vm.pkr.hcl
     ```
 Once the build completes, the custom image will be available in Azure and later used by Terraform to provision the self-hosted CI agent VM.
+
 ---
 
 ### Setup Azure devops organization
