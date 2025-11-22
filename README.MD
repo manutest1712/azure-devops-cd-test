@@ -1,70 +1,193 @@
-# Overview
+# 🔭 Overview
 
-This project provides a cloud-hosted Flask web application that predicts housing prices using a trained machine-learning model.  
-Users can send property details to the `/predict` API and instantly receive price predictions in JSON format.  
-Automation is built in: a Makefile simplifies setup, testing, and deployment.
-Continuous Integration runs through GitHub Actions, which installs dependencies, runs pylint for code analysis and pytest to execute unit test cases on every push to the main branch.
-Azure Pipelines provides continuous delivery by packaging the application and deploying it directly to an Azure Web App.  
-The result is a reliable, scalable, and automated solution that supports rapid development and real-time model inference.
+This project implements a complete CI/CD pipeline using **Azure DevOps**, provisioning infrastructure with **Terraform**, deploying application components to Azure, and running automated test suites including Postman, Selenium, and JMeter.
 
-## Project Plan
+---
 
-[Trello board for the Housing Trend Project Planner](https://trello.com/b/9a9XvYIE/fask-housing-trend-weekly-plan)
+## 🧩 Pipeline Workflow
 
-[Project Plan In Excel](https://docs.google.com/spreadsheets/d/1QsJpxNEZldNpzWKBwi_6Fmf42sGRiEYL/edit?usp=sharing&ouid=109875377807326084890&rtpof=true&sd=true)
+| Stage | Purpose |
+|-------|---------|
+| 🏗 Build & Provision | Terraform installation, configuration, and infrastructure apply |
+| 🧪 API Testing | Postman tests executed via Newman |
+| 🖥 UI Testing | Selenium functional testing executed on virtual machine |
+| 📦 Artifact Packaging | Archives and uploads automation test bundles |
+| 🚀 Deployment | Web App deployed to Azure with service connection |
+| ⚡ Load Testing | JMeter endurance + stress scenarios executed |
+| 📊 Reporting | Test results and HTML output uploaded as artifacts |
 
-## Instructions
+---
 
-### Setup Azure devops organization
-#### Step 1:  Create a Project
-Create a new Azure DevOps project named DemoProject.
-#### Step 2:  Create a Service Connection
+## 🔧 Technology Stack
 
-    1. Go to **Project Settings** → **Service connections**
-    2. Click **New service connection** → **Azure Resource Manager**
-    2. Choose **App Registration or managed identity(manual) **
-    3. Enter your Azure authentication details:
-        a. Subscription ID
-        b. Tenant ID
-        c. Client ID
-        d. Client Secret
-    4. Name it: DemoConnection
-    5. Grant access permission to all pipelines.
+| Category | Tools |
+|---------|-------|
+| CI/CD | Azure DevOps Pipelines |
+| IaC | Terraform (AzureRM backend) |
+| API Testing | Postman + Newman (JUnit reports) |
+| UI Testing | Selenium + Python |
+| Load Testing | Apache JMeter |
+| Deployment | Azure Web App Service |
 
-This service connection will be used by Terraform tasks to authenticate to Azure.
+---
 
-#### Step 3:  Create a Self-Hosted Agent Pool
-You need a dedicated pool because the VM created by Terraform will register itself to this pool.
+## 📂 Pipeline Outputs
 
-    1. Go to **Project Settings → Agent Pools**
-    2. Click **Add pool**
-    3. Choose **Self-hosted** as the pool type.
-    4. Name it: myAgentPool
-    5. Grant access permission to all pipelines.
+- 📄 Automated Test Reports (JUnit Format)
+- 📦 Archived Selenium, Postman & JMeter bundles
+- 📊 Performance logs & HTML dashboards
 
-**Note**: No need to add an agent manually — the infra setup will do that.
+---
 
-### Setup agents
+## ✔ Requirements
 
-#### Setup agent image
+- Azure DevOps Service Connection configured
+- Terraform backend storage provisioned
+- Secure secret variables stored in pipeline settings
+
+---
+
+## 🏁 CI/CD Summary
+
+This pipeline automates:
+
+- Infrastructure provisioning
+- Application deployment
+- End-to-end testing validation
+- Performance analysis
+- Artifact archiving and publishing
+
+> **Result: A fully automated DevOps workflow supporting continuous delivery and quality assurance.**
+
+
+## 📘 Instructions
+
+### ⚙️ Setup agents
+
+#### 🧱 Create Build Agent Image with Packer
 1. Navigate to the folder:
     ```bash
         azure-devops-cd-test\packer\agent-image
     ```
-2. Open the file:
-    variables.pkrvars.hcl
-3. Update the required variables with your Azure details:
+2. Open the file variables.pkrvars.hcl and update the Azure authentication fields:
     ```bash
         client_id        = "xxxxxx"
         client_secret    = "xxxxxx"
         tenant_id        = "xxxxxx"
         subscription_id  = "xxxxxx"
     ```
-    **Note**: Do not commit variables.pkrvars.hcl to Git
-4. Run the following command to build the agent VM image:
+    ⚠️ **Important**: **Do NOT** commit variables.pkrvars.hcl to source control. Add it to .gitignore to prevent accidental secrets exposure
+3. Build the VM image using Packer:
     ```bash
         packer build -var-file="variables.pkrvars.hcl" packer-ci-vm.pkr.hcl
     ```
+Once the build completes, the custom image will be available in Azure and later used by Terraform to provision the self-hosted CI agent VM.
+
+---
+### 🧰 Azure DevOps Build & Test Agent Setup
+This section outlines the steps required to configure Azure DevOps and prepare the environment for deploying self-hosted build and test agents created through Terraform
+
+#### 1️⃣ Prerequisites
+Before proceeding, ensure you have:
+- An active Azure subscription
+- Access to an Azure DevOps organization
+- Required permissions to create:
+  - Azure resources
+  - Service connections
+  - Agent pools
+
+#### 2️⃣ Set Up Azure DevOps Organization
+
+##### ✔️ Step 1: Create a Project
+1. Sign in to **Azure DevOps**.
+2. Create an organization if one is not there already
+3. Go to the **Projects** section.
+4. Create a new project and name it: DemoProject
+
+
+##### ✔️ Step 2: Create a Service Connection
+This connection will be used by Terraform tasks to authenticate to Azure.
+1. Go to **Project Settings** → **Service connections**
+2. Click **New service connection** → **Azure Resource Manager**
+3. Choose **Identity Type** as **App Registrationor Managed Identity (Manual)**
+4. Choose **Credential** as **Secret**
+5. Enter your Azure authentication details:
+   - Subscription ID  
+   - Tenant ID  
+   - Client ID  
+   - Client Secret
+6. Name it: `DemoConnection`
+7. Enable: **Grant access permission to all pipelines**
+
+
+##### ✔️ Step 3: Create a Self-Hosted Agent Pool
+The virtual machine deployed via Terraform will automatically register itself as an agent in this pool.
+
+1. Go to **Project Settings → Agent Pools**
+2. Select **Add pool**
+3. Choose **Self-hosted** as the pool type
+4. Name it: `myAgentPool`
+5. Enable: **Grant access permission to all pipelines**
+
+⚠️ **Note:** Do not manually add agents. The Terraform infrastructure will register the agent automatically.
+
+##### ✔️ Step 4: Generate a Personal Access Token (PAT)
+
+This token will be used by the VM agent to authenticate with Azure DevOps.
+
+1. Go to **User Settings → Personal Access Tokens**
+2. Click **New Token**
+3. Set a descriptive name: `AgentRegistrationToken`
+4. Set the expiry duration as needed (recommended: **90 days** or higher)
+5. Assign scope: **Full access**
+6. Click **Create** and copy the token
+
+⚠️ **Important:** Store the PAT securely. You will not be able to view it again once you close the window.
+
+##### 🚀 Step 5: Deploy Self-Hosted Agent Infrastructure with Terraform
+
+1. Navigate to the Terraform environment folder:
+   ```bash
+   azure-devops-cd-test\terraform\environments\test\agent-infra
+   ```
+
+2. Open the file **terraform.tfvars** and update the required values:
+   ```hcl
+   subscription_id = "xxxxx"
+   client_id       = "xxxxx"
+   client_secret   = "xxxxx"
+   tenant_id       = "xxxxx"
+
+   azdo_url        = "https://dev.azure.com/xxxxx"
+   azdo_pat        = "xxxxx"
+   ```
+
+   ⚠️ **Security Notice:** Do **NOT** commit `terraform.tfvars` to source control. Add it to `.gitignore` to prevent exposing sensitive credentials.
+
+3. Initialize Terraform modules and providers:
+   ```bash
+   terraform init
+   ```
+
+4. Preview the infrastructure changes:
+   ```bash
+   terraform plan -out infraplan
+   ```
+
+5. Deploy the infrastructure:
+   ```bash
+   terraform apply "infraplan"
+   ```
+
+---
+
+Once deployment completes:
+
+- The virtual machine will automatically register itself as a **self-hosted agent** in the selected Azure DevOps agent pool.
+- A VM will be provisioned and configured for use as a **build execution environment**.
+
+
+
 
 #### Install the Terraform Azure DevOps Extension
 
