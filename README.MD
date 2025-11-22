@@ -104,6 +104,7 @@ Before proceeding, ensure you have:
 3. Go to the **Projects** section.
 4. Create a new project and name it: DemoProject
 
+
 ##### ✔️ Step 2: Create a Service Connection
 This connection will be used by Terraform tasks to authenticate to Azure.
 1. Go to **Project Settings** → **Service connections**
@@ -118,6 +119,7 @@ This connection will be used by Terraform tasks to authenticate to Azure.
 6. Name it: `DemoConnection`
 7. Enable: **Grant access permission to all pipelines**
 
+
 ##### ✔️ Step 3: Create a Self-Hosted Agent Pool
 The virtual machine deployed via Terraform will automatically register itself as an agent in this pool.
 
@@ -128,6 +130,20 @@ The virtual machine deployed via Terraform will automatically register itself as
 5. Enable: **Grant access permission to all pipelines**
 
 ⚠️ **Note:** Do not manually add agents. The Terraform infrastructure will register the agent automatically.
+
+##### ✔️ Step 4: Generate a Personal Access Token (PAT)
+
+This token will be used by the VM agent to authenticate with Azure DevOps.
+
+1. Go to **User Settings → Personal Access Tokens**
+2. Click **New Token**
+3. Set a descriptive name: `AgentRegistrationToken`
+4. Set the expiry duration as needed (recommended: **90 days** or higher)
+5. Assign scope: **Full access**
+6. Click **Create** and copy the token
+
+⚠️ **Important:** Store the PAT securely. You will not be able to view it again once you close the window.
+
 
 #### Install the Terraform Azure DevOps Extension
 
