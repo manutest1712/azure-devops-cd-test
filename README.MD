@@ -60,11 +60,11 @@ This pipeline automates:
 > **Result: A fully automated DevOps workflow supporting continuous delivery and quality assurance.**
 
 
-## Instructions
+## 📘 Instructions
 
-### Setup agents
+### ⚙️ Setup agents
 
-#### Create Build Agent Image with Packer
+#### 🧱 Create Build Agent Image with Packer
 1. Navigate to the folder:
     ```bash
         azure-devops-cd-test\packer\agent-image
