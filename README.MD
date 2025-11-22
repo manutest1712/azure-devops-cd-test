@@ -205,16 +205,16 @@ This section explains how to create a deployment environment in Azure DevOps and
 
 #### 1️⃣ Create Azure DevOps Environment
 
-Starting from the Azure DevOps **Pipelines → Environments** page:
+From the Azure DevOps **Pipelines → Environments** page:
 
 1.  Click the **Create environment** button. 
 2.  In the dialog box that appears:
-    * **Name:** Enter the required name: `test-selenium-env`
-    * **Description:** (Optional) Enter a brief description, such as: `Environment for Selenium UI testing on Linux VM.`
-    * **Resource:** Select Virtual Machines
-3.  Click **Create** - this will open the **Add Resource** dialog
+    * **Name:** `test-selenium-env`
+    * **Description (optional):** `Environment for Selenium UI testing on Linux VM.`
+    * **Resource:** **Virtual machines**
+3.  Click **Create** - this opens the **Add Resource** dialog
 4.  Select **Operating system** as Linux
-5.  Azure DevOps will generate a script. Copy the script to apply in the virtual machine
+5.  Azure DevOps will generate a registration script. Copy this script and run it on the virtual machine.
 
 > 📌 Note: The Virtual Machine will not appear in Azure DevOps until the generated registration script is executed on the target Linux VM.
 
