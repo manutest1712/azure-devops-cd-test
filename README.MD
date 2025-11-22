@@ -144,6 +144,50 @@ This token will be used by the VM agent to authenticate with Azure DevOps.
 
 ⚠️ **Important:** Store the PAT securely. You will not be able to view it again once you close the window.
 
+##### 🚀 Step 5: Deploy Self-Hosted Agent Infrastructure with Terraform
+
+1. Navigate to the Terraform environment folder:
+   ```bash
+   azure-devops-cd-test\terraform\environments\test\agent-infra
+   ```
+
+2. Open the file **terraform.tfvars** and update the required values:
+   ```hcl
+   subscription_id = "xxxxx"
+   client_id       = "xxxxx"
+   client_secret   = "xxxxx"
+   tenant_id       = "xxxxx"
+
+   azdo_url        = "https://dev.azure.com/xxxxx"
+   azdo_pat        = "xxxxx"
+   ```
+
+   ⚠️ **Security Notice:** Do **NOT** commit `terraform.tfvars` to source control. Add it to `.gitignore` to prevent exposing sensitive credentials.
+
+3. Initialize Terraform modules and providers:
+   ```bash
+   terraform init
+   ```
+
+4. Preview the infrastructure changes:
+   ```bash
+   terraform plan -out infraplan
+   ```
+
+5. Deploy the infrastructure:
+   ```bash
+   terraform apply "infraplan"
+   ```
+
+---
+
+Once deployment completes:
+
+- The virtual machine will automatically register itself as a **self-hosted agent** in the selected Azure DevOps agent pool.
+- A VM will be provisioned and configured for use as a **build execution environment**.
+
+
+
 
 #### Install the Terraform Azure DevOps Extension
 
