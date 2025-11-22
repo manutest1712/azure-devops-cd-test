@@ -230,8 +230,8 @@ From the Azure DevOps **Pipelines → Environments** page:
 * When prompted with **Enter Comma separated list of tags (e.g web, db)**, type **selenium** and press **Enter**.
 
 #### 3️⃣ Verification:
-    * After the script runs successfully, return to the Azure DevOps Environment page.
-    * The newly linked Virtual Machine - `selenium-test-vm` should appear under the **Resources** tab with a **Status** of **Never Deployed**. 
+* After the script runs successfully, return to the Azure DevOps Environment page.
+* The newly linked Virtual Machine - `selenium-test-vm` should appear under the **Resources** tab with a **Status** of **Never Deployed**. 
 
 >💡 Tip: It may take a few seconds for the VM to appear; refresh the page if needed.
 ---
