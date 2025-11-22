@@ -84,6 +84,17 @@ This pipeline automates:
 Once the build completes, the custom image will be available in Azure and later used by Terraform to provision the self-hosted CI agent VM.
 
 ---
+### 🧰 Azure DevOps Build & Test Agent Setup
+This section outlines the steps required to configure Azure DevOps and prepare the environment for deploying self-hosted build and test agents created through Terraform
+
+#### 1️⃣ Prerequisites
+Before proceeding, ensure you have:
+- An active Azure subscription
+- Access to an Azure DevOps organization
+- Required permissions to create:
+  - Azure resources
+  - Service connections
+  - Agent pools
 
 ### Setup Azure devops organization
 #### Step 1:  Create a Project
