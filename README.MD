@@ -96,6 +96,15 @@ Before proceeding, ensure you have:
   - Service connections
   - Agent pools
 
+#### 2️⃣ Set Up Azure DevOps Organization
+
+##### ✔️ Step 1: Create a Project
+1. Sign in to **Azure DevOps**.
+2. Create an organization if one is not there already
+3. Go to the **Projects** section.
+4. Create a new project and name it: DemoProject
+
+### Step 1: Create a Project
 ### Setup Azure devops organization
 #### Step 1:  Create a Project
 Create a new Azure DevOps project named DemoProject.
