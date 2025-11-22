@@ -18,11 +18,18 @@ This project implements a complete CI/CD pipeline using **Azure DevOps**, provis
 
 ---
 
-## Project Plan
+## 🔧 Technology Stack
 
-[Trello board for the Housing Trend Project Planner](https://trello.com/b/9a9XvYIE/fask-housing-trend-weekly-plan)
+| Category | Tools |
+|---------|-------|
+| CI/CD | Azure DevOps Pipelines |
+| IaC | Terraform (AzureRM backend) |
+| API Testing | Postman + Newman (JUnit reports) |
+| UI Testing | Selenium + Python |
+| Load Testing | Apache JMeter |
+| Deployment | Azure Web App Service |
 
-[Project Plan In Excel](https://docs.google.com/spreadsheets/d/1QsJpxNEZldNpzWKBwi_6Fmf42sGRiEYL/edit?usp=sharing&ouid=109875377807326084890&rtpof=true&sd=true)
+---
 
 ## Instructions
 
