@@ -1,4 +1,4 @@
-# Overview
+# 🚀 Overview
 
 This project implements a complete CI/CD pipeline using **Azure DevOps**, provisioning infrastructure with **Terraform**, deploying application components to Azure, and running automated test suites including Postman, Selenium, and JMeter.
 
