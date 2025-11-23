@@ -1,1 +1,47 @@
 
+name: Terraform Static Code Analysis
+
+on:
+  pull_request:
+    paths:
+      - '**/*.tf'
+  push:
+    branches:
+      - main
+
+jobs:
+  checkov:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      # Optional: Initialize Terraform (required if scanning a plan file)
+      - name: Terraform Init
+        run: terraform init
+
+      # Run checkov against Terraform folder
+      - name: Run Checkov Scan
+        run: |
+          checkov -d . --output cli
+
+      # Optional: Generate JSON output
+      - name: Generate JSON Report
+        run: |
+          checkov -d . -o json > checkov-report.json
+
+      # Optional: Upload report as artifact
+      - name: Upload Scan Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkov-report
+          path: checkov-report.json
