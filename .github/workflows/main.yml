@@ -25,6 +25,12 @@ jobs:
       - name: Install Checkov
         run: pip install checkov
 
+            # Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6   # (or match your repo version)
+
       # Optional: Run terraform init in the correct folder
       - name: Terraform Init
         working-directory: ./terraform/environments/test
