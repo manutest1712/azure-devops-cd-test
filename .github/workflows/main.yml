@@ -25,22 +25,20 @@ jobs:
       - name: Install Checkov
         run: pip install checkov
 
-      # Optional: Initialize Terraform (required if scanning a plan file)
+      # Optional: Run terraform init in the correct folder
       - name: Terraform Init
+        working-directory: ./terraform/environments/test
         run: terraform init
 
-      # Run checkov against Terraform folder
+      # --- Run Checkov Against This Specific Folder ---
       - name: Run Checkov Scan
-        run: |
-          checkov -d . --output cli
+        run: checkov -d ./terraform/environments/test --output cli
 
-      # Optional: Generate JSON output
-      - name: Generate JSON Report
-        run: |
-          checkov -d . -o json > checkov-report.json
+      # Optional: Create JSON report for storage or tools
+      - name: Create JSON Report
+        run: checkov -d ./terraform/environments/test -o json > checkov-report.json
 
-      # Optional: Upload report as artifact
-      - name: Upload Scan Report
+      - name: Upload Checkov Report
         uses: actions/upload-artifact@v4
         with:
           name: checkov-report
