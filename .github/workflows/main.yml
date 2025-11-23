@@ -33,7 +33,7 @@ jobs:
 
       # --- Run Checkov Against This Specific Folder ---
       - name: Run Checkov Scan
-        run: checkov -d ./terraform/environments/test --output cli
+        run: checkov -d ./terraform/environments/test/agent-infra --output cli
 
       # Optional: Create JSON report for storage or tools
       - name: Create JSON Report
